@@ -1,0 +1,1 @@
+add_platform_executable(rear app_rear.cpp)
