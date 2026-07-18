@@ -44,4 +44,4 @@ clean target="all":
 
 run app: (build "host")
     @printf "\n"
-    ./build/host/embedded/app/{{app}}/{{app}}.exe
+    ./build/host/embedded/app/{{app}}/{{app}}
