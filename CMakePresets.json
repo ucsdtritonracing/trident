@@ -1,0 +1,39 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "stm32",
+            "displayName": "STM32",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/stm32",
+            "toolchainFile": "${sourceDir}/cmake/arm-none-eabi-gcc.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "host",
+            "displayName": "Host",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/host",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "stm32",
+            "configurePreset": "stm32"
+        },
+        {
+            "name": "host",
+            "configurePreset": "host"
+        }
+    ]
+}
