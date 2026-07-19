@@ -11,8 +11,8 @@ assignees: ''
 - Necessary context to understand the issue.
 
 ## Work Scope
-- What needs to happen for this issue to be considered resolved.
+- [] Work that needs to be completed for this issue to be considered resolved.
 
 ## Verification
-- Prove that you resolved the issue.
-- Include screenshots, commands, output, etc.
+- Checks to confirm that this issue has been resolved.
+- Include screenshots, commands, output, etc. (if applicable)
