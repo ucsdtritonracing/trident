@@ -45,3 +45,41 @@ clean target="all":
 run app: (build "host")
     @printf "\n"
     ./build/host/embedded/app/{{app}}/{{app}}
+
+
+[script]
+format-check target="all":
+    set -eu; \
+    case "{{target}}" in \
+        all|cpp|python) ;; \
+        *) echo "unsupported target: {{target}}"; exit 1 ;; \
+    esac; \
+    if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
+        echo "Checking C++ formatting and linting..."; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-tidy -p build/host {} +; \
+    fi; \
+    if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
+        echo "Checking Python formatting and linting..."; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --check --diff --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --config pyproject.toml {} +; \
+    fi
+
+
+[script]
+format target="all":
+    set -eu; \
+    case "{{target}}" in \
+        all|cpp|python) ;; \
+        *) echo "unsupported target: {{target}}"; exit 1 ;; \
+    esac; \
+    if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
+        echo "Formatting C++ files..."; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file -i {} +; \
+    fi; \
+    if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
+        echo "Formatting Python files..."; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --config pyproject.toml {} +; \
+        echo "Applying safe Python lint fixes..."; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --fix --config pyproject.toml {} +; \
+    fi
