@@ -1,0 +1,58 @@
+name: lint-format
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  cpp:
+    name: C++ formatting and linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format clang-tidy cmake ninja-build just
+
+      - name: Configure host build for clang-tidy
+        run: cmake --preset host
+
+      - name: Run C++ formatting and lint checks
+        run: just format-check cpp
+
+  python:
+    name: Python formatting and linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y just
+
+      - name: Install Python tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install '.[dev]'
+
+      - name: Run Python formatting and lint checks
+        run: just format-check python
