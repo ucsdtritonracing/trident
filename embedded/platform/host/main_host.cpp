@@ -1,9 +1,9 @@
-#include <cstdio>
+#include <stdio.h>
 
 #include "platform.h"
 
 int main(int argc, char* argv[]) {
-    printf("Running on host!\n");
+    puts("Running on host!");
     app_main();
     return 0;
 }

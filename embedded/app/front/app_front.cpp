@@ -1,7 +1,5 @@
-#include <cstdio>
+#include <stdio.h>
 
 #include "platform.h"
 
-void app_main() {
-    printf("Front app running!\n");
-}
+void app_main() { puts("Front app running!"); }

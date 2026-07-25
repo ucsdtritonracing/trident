@@ -56,13 +56,20 @@ format-check target="all":
     esac; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
         echo "Checking C++ formatting and linting..."; \
+        tidy_args=""; \
+        if [ "$(uname -s)" = "Darwin" ]; then \
+            sdkroot="$(xcrun --show-sdk-path 2>/dev/null || true)"; \
+            if [ -n "$sdkroot" ]; then \
+                tidy_args="--extra-arg=--sysroot=$sdkroot"; \
+            fi; \
+        fi; \
         find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} +; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-tidy -p build/host {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-tidy -p build/host $tidy_args {} +; \
     fi; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
         echo "Checking Python formatting and linting..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --check --diff --config pyproject.toml {} +; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --check --diff --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --config pyproject.toml {} +; \
     fi
 
 
@@ -79,7 +86,7 @@ format target="all":
     fi; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
         echo "Formatting Python files..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --config pyproject.toml {} +; \
         echo "Applying safe Python lint fixes..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --fix --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --fix --config pyproject.toml {} +; \
     fi

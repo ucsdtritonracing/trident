@@ -1,4 +1,4 @@
-#include <cstdio>
+#include <stdio.h>
 
 #include "platform.h"
 
@@ -14,11 +14,10 @@ int _write(int, char*, int len) {
     return len;
 }
 void* _sbrk(ptrdiff_t) { return (void*)-1; }
-
 }
 
 int main() {
-    printf("Running on STM32!\n");
+    puts("Running on STM32!");
     app_main();
     return 0;
 }
