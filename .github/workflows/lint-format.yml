@@ -23,7 +23,12 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format clang-tidy cmake ninja-build just
+          sudo apt-get install -y clang-format clang-tidy cmake ninja-build
+
+      - name: Install just 
+        uses: extractions/setup-just@v2
+        with: 
+          just-version: '1.56.0'
 
       - name: Configure host build for clang-tidy
         run: cmake --preset host
@@ -44,15 +49,15 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y just
+      - name: Install just 
+        uses: extractions/setup-just@v2
+        with: 
+          just-version: '1.56.0'
 
       - name: Install Python tooling
         run: |
           python -m pip install --upgrade pip
-          python -m pip install '.[dev]'
+          python -m pip install ruff
 
       - name: Run Python formatting and lint checks
         run: just format-check python
