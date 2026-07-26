@@ -54,23 +54,40 @@ format-check target="all":
         all|cpp|python) ;; \
         *) echo "unsupported target: {{target}}"; exit 1 ;; \
     esac; \
+    lint_status=0; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
         echo "Checking C++ formatting and linting..."; \
-        tidy_args=""; \
+        cmake --preset host; \
+        cmake --preset stm32; \
+        host_tidy_args=""; \
         if [ "$(uname -s)" = "Darwin" ]; then \
             sdkroot="$(xcrun --show-sdk-path 2>/dev/null || true)"; \
             if [ -n "$sdkroot" ]; then \
-                tidy_args="--extra-arg=--sysroot=$sdkroot"; \
+                host_tidy_args="--extra-arg=--sysroot=$sdkroot"; \
             fi; \
         fi; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} +; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-tidy -p build/host $tidy_args {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} + || lint_status=1; \
+        echo "Linting host code with build/host compile database..."; \
+        tmp_host=$(mktemp); \
+        python3 tools/generators/list_compile_db_files.py "$PWD" "build/host/compile_commands.json" > "$tmp_host"; \
+        while IFS= read -r file; do \
+            clang-tidy -p build/host $host_tidy_args "$file" || lint_status=1; \
+        done < "$tmp_host"; \
+        rm -f "$tmp_host"; \
+        echo "Linting STM32 code with build/stm32 compile database..."; \
+        tmp_stm32=$(mktemp); \
+        python3 tools/generators/list_compile_db_files.py "$PWD" "build/stm32/compile_commands.json" > "$tmp_stm32"; \
+        while IFS= read -r file; do \
+            clang-tidy -p build/stm32 "$file" || lint_status=1; \
+        done < "$tmp_stm32"; \
+        rm -f "$tmp_stm32"; \
     fi; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
         echo "Checking Python formatting and linting..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --check --diff --config pyproject.toml {} +; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --config pyproject.toml {} +; \
-    fi
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --check --diff --config pyproject.toml {} + || lint_status=1; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --config pyproject.toml {} + || lint_status=1; \
+    fi; \
+    exit $lint_status
 
 
 [script]
