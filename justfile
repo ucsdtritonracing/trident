@@ -66,6 +66,9 @@ format-check target="all":
                 host_tidy_args="--extra-arg=--sysroot=$sdkroot"; \
             fi; \
         fi; \
+        stm32_cc=$(python3 -c "import json; db=json.load(open('build/stm32/compile_commands.json')); print(db[0]['command'].split()[0])"); \
+        stm32_sysroot=$("$stm32_cc" -print-sysroot); \
+        stm32_tidy_args="--target=arm-none-eabi --sysroot=$stm32_sysroot"; \
         find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} + || lint_status=1; \
         echo "Linting host code with build/host compile database..."; \
         tmp_host=$(mktemp); \
@@ -78,7 +81,7 @@ format-check target="all":
         tmp_stm32=$(mktemp); \
         python3 tools/generators/list_compile_db_files.py "$PWD" "build/stm32/compile_commands.json" > "$tmp_stm32"; \
         while IFS= read -r file; do \
-            clang-tidy -p build/stm32 "$file" || lint_status=1; \
+            clang-tidy -p build/stm32 $stm32_tidy_args "$file" || lint_status=1; \
         done < "$tmp_stm32"; \
         rm -f "$tmp_stm32"; \
     fi; \
