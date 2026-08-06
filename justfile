@@ -57,23 +57,9 @@ format-check target="all":
     lint_status=0; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
         echo "Checking C++ formatting and linting..."; \
-        cmake --preset host; \
-        cmake --preset stm32; \
-        host_tidy_args=""; \
-        if [ "$(uname -s)" = "Darwin" ]; then \
-            sdkroot="$(xcrun --show-sdk-path 2>/dev/null || true)"; \
-            if [ -n "$sdkroot" ]; then \
-                host_tidy_args="--extra-arg=--sysroot=$sdkroot"; \
-            fi; \
-        fi; \
-        stm32_cc=$(python3 -c "import json; db=json.load(open('build/stm32/compile_commands.json')); print(db[0]['command'].split()[0])"); \
-        stm32_tidy_args="--extra-arg=--target=arm-none-eabi"; \
-        tmp_includes=$(mktemp); \
-        echo | "$stm32_cc" -std=gnu++20 -xc++ -E -Wp,-v - 2>&1 | awk '/search starts here/{flag=1; next} /End of search list/{flag=0} flag' | sed 's/^ *//' | sort -u > "$tmp_includes"; \
-        while IFS= read -r inc_dir; do \
-            [ -n "$inc_dir" ] && stm32_tidy_args="$stm32_tidy_args --extra-arg=-isystem$inc_dir"; \
-        done < "$tmp_includes"; \
-        rm -f "$tmp_includes"; \
+        just configure "all"; \
+        host_tidy_args=$(python3 tools/generators/clang_tidy_args.py host); \
+        stm32_tidy_args=$(python3 tools/generators/clang_tidy_args.py stm32); \
         find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} + || lint_status=1; \
         echo "Linting host code with build/host compile database..."; \
         tmp_host=$(mktemp); \
@@ -92,8 +78,8 @@ format-check target="all":
     fi; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
         echo "Checking Python formatting and linting..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --check --diff --config pyproject.toml {} + || lint_status=1; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --config pyproject.toml {} + || lint_status=1; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff format --check --diff --config pyproject.toml {} + || lint_status=1; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff check --config pyproject.toml {} + || lint_status=1; \
     fi; \
     exit $lint_status
 
@@ -111,7 +97,7 @@ format target="all":
     fi; \
     if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
         echo "Formatting Python files..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff format --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff format --config pyproject.toml {} +; \
         echo "Applying safe Python lint fixes..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec python3 -m ruff check --fix --config pyproject.toml {} +; \
+        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff check --fix --config pyproject.toml {} +; \
     fi

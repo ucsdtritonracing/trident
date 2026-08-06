@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Repository tooling configuration for Trident"
 requires-python = ">=3.11"
 
+# After editing dependencies below, run `uv lock` and commit uv.lock.
 [project.optional-dependencies]
 dev = [
     "ruff>=0.16.0",
