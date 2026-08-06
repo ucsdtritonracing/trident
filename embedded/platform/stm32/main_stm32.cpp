@@ -17,7 +17,7 @@ void* _sbrk(ptrdiff_t) { return (void*)-1; }
 }
 
 int main() {
-    puts("Running on STM32!");
+    printf("Running on STM32!\n");
     app_main();
     return 0;
 }

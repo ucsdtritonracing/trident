@@ -1,45 +1,24 @@
 # print working directory variable
 pwd := `pwd`
 
-
-[script]
 configure target="all":
-    if [ "{{target}}" = "all" ]; then
-        cmake --preset stm32;
-        cmake --preset host;
-    else
-        cmake --preset {{target}};
-    fi
+    python3 tools/cmake_target.py configure {{target}}
 
 
-[script]
 compile-commands:
     # combine compile_commands.json and write to root
     uv run python tools/generators/merge_compile_commands.py \
     -b {{pwd}}/build/stm32 \
-    -b {{pwd}}/build/host;
+    -b {{pwd}}/build/host
 
 
-[script]
 build target="all": (configure target)
-    if [ "{{target}}" = "all" ]; then
-        cmake --build --preset stm32;
-        cmake --build --preset host;
-    else
-        cmake --build --preset {{target}};
-    fi
-    
-    just compile-commands;
+    python3 tools/cmake_target.py build {{target}}
+    just compile-commands
 
 
-[script]
 clean target="all":
-    if [ "{{target}}" = "all" ]; then
-        cmake --build --preset stm32 --target clean;
-        cmake --build --preset host --target clean;
-    else
-        cmake --preset {{target}};
-    fi
+    python3 tools/cmake_target.py clean {{target}}
 
 
 run app: (build "host")
@@ -47,57 +26,9 @@ run app: (build "host")
     ./build/host/embedded/app/{{app}}/{{app}}
 
 
-[script]
 format-check target="all":
-    set -eu; \
-    case "{{target}}" in \
-        all|cpp|python) ;; \
-        *) echo "unsupported target: {{target}}"; exit 1 ;; \
-    esac; \
-    lint_status=0; \
-    if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
-        echo "Checking C++ formatting and linting..."; \
-        just configure "all"; \
-        host_tidy_args=$(python3 tools/generators/clang_tidy_args.py host); \
-        stm32_tidy_args=$(python3 tools/generators/clang_tidy_args.py stm32); \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file --dry-run --Werror {} + || lint_status=1; \
-        echo "Linting host code with build/host compile database..."; \
-        tmp_host=$(mktemp); \
-        python3 tools/generators/list_compile_db_files.py "$PWD" "build/host/compile_commands.json" > "$tmp_host"; \
-        while IFS= read -r file; do \
-            clang-tidy -p build/host $host_tidy_args "$file" || lint_status=1; \
-        done < "$tmp_host"; \
-        rm -f "$tmp_host"; \
-        echo "Linting STM32 code with build/stm32 compile database..."; \
-        tmp_stm32=$(mktemp); \
-        python3 tools/generators/list_compile_db_files.py "$PWD" "build/stm32/compile_commands.json" > "$tmp_stm32"; \
-        while IFS= read -r file; do \
-            clang-tidy -p build/stm32 $stm32_tidy_args "$file" || lint_status=1; \
-        done < "$tmp_stm32"; \
-        rm -f "$tmp_stm32"; \
-    fi; \
-    if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
-        echo "Checking Python formatting and linting..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff format --check --diff --config pyproject.toml {} + || lint_status=1; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff check --config pyproject.toml {} + || lint_status=1; \
-    fi; \
-    exit $lint_status
+    python3 tools/lint.py check {{target}}
 
 
-[script]
 format target="all":
-    set -eu; \
-    case "{{target}}" in \
-        all|cpp|python) ;; \
-        *) echo "unsupported target: {{target}}"; exit 1 ;; \
-    esac; \
-    if [ "{{target}}" = "all" ] || [ "{{target}}" = "cpp" ]; then \
-        echo "Formatting C++ files..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' -o -path './embedded/boards/compute_module/cubemx/Core' -o -path './embedded/boards/compute_module/cubemx/Drivers' \) -prune -o \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -print -exec clang-format --style=file -i {} +; \
-    fi; \
-    if [ "{{target}}" = "all" ] || [ "{{target}}" = "python" ]; then \
-        echo "Formatting Python files..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff format --config pyproject.toml {} +; \
-        echo "Applying safe Python lint fixes..."; \
-        find . \( -path './build' -o -path './.git' -o -path './.venv' -o -path './venv' -o -path '*/.venv' -o -path '*/venv' -o -path './node_modules' -o -path './dist' -o -path './site-packages' \) -prune -o -name '*.py' -print -exec uv run --extra dev ruff check --fix --config pyproject.toml {} +; \
-    fi
+    python3 tools/lint.py fix {{target}}
