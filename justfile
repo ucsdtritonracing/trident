@@ -1,6 +1,13 @@
 # print working directory variable
 pwd := `pwd`
 
+
+wipe:
+    rm -rf build
+    rm -rf .cache
+
+
+[script]
 configure target="all":
     uv run python tools/cmake_target.py configure {{target}}
 

@@ -1,0 +1,18 @@
+[workspace]
+channels = ["conda-forge", "memfault"]
+name = "trident"
+platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+cmake = ">=3.21"
+ninja = "*"
+just = "*"
+uv = "*"
+binutils = "*"
+gcc = "*"
+gxx = "*"
+zeromq = "*"
+cppzmq = "*"
