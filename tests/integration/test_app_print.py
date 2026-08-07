@@ -21,7 +21,7 @@ def test_app_print(app_name):
         f"Executable not found at {executable_path}. "
         f"Did you run `just run {app_name}' before running the tests?"
     )
-    #runs the function of string of the path before
+    
     result = subprocess.run(
         [str(executable_path)],
         capture_output=True,
