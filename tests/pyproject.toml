@@ -1,0 +1,8 @@
+[project]
+name = "trident-test-suite"
+version = "0.1.0"
+description = "Integration tests for the trident monorepo"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest",
+]
