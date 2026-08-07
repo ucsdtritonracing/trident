@@ -3,8 +3,9 @@ pwd := `pwd`
 
 
 wipe:
-    rm -rf build
-    rm -rf .cache
+    @rm -rf build
+    @rm -rf .cache
+    @rm -rf .venv
 
 
 [script]
