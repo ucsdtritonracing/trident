@@ -3,27 +3,27 @@ from pathlib import Path
 import pytest
 
 
-repoRoot = Path(__file__).resolve().parents[2]
-buildAppDir= repoRoot / "build"/"host"/"embedded"/"app"
+repo_root = Path(__file__).resolve().parents[2]
+build_app_dir= repo_root / "build"/"host"/"embedded"/"app"
 
 
-expectedOutput = {"front": ["Running on host!\nFront app running!"],
+expected_output = {"front": ["Running on host!\nFront app running!"],
                   "rear": ["Running on host!\nRear app running!"],}
 
 
 def app_executable(app_name: str):
-    return buildAppDir / app_name /app_name
+    return build_app_dir / app_name /app_name
 
-@pytest.mark.parametrize("app_name",expectedOutput.keys())
+@pytest.mark.parametrize("app_name",expected_output.keys())
 def test_app_print(app_name):
-    executablePath = app_executable(app_name)
-    assert executablePath.exists(),(
-        f"Executable not found at {executablePath}. "
+    executable_path = app_executable(app_name)
+    assert executable_path.exists(),(
+        f"Executable not found at {executable_path}. "
         f"Did you run `just run {app_name}' before running the tests?"
     )
-
+    #runs the function of string of the path before
     result = subprocess.run(
-        [str(executablePath)],
+        [str(executable_path)],
         capture_output=True,
         text=True,
         timeout=10,
@@ -33,7 +33,7 @@ def test_app_print(app_name):
         f"stdout:\n{result.stdout}\n"
         f"stderr:\n{result.stderr}"
     )
-    for output in expectedOutput[app_name]:
+    for output in expected_output[app_name]:
         assert output in result.stdout, (
             f"Expected line {output!r} not found in {app_name} stdout:\n"
             f"{result.stdout!r}"
