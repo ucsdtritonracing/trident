@@ -29,15 +29,24 @@ def run(cmd: list[str]) -> None:
         sys.exit(result.returncode)
 
 
+def run_cmake(action: str, target: str = "all") -> None:
+    """Run `action` (configure/build/clean) against `target` (all/host/stm32).
+
+    Pulled out of main() so other tools (tools/lint.py) can call this
+    directly.
+    """
+    presets = PRESETS if target == "all" else [target]
+    for preset in presets:
+        run(ACTIONS[action](preset))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=sorted(ACTIONS))
     parser.add_argument("target", nargs="?", default="all", choices=["all", "host", "stm32"])
     args = parser.parse_args()
 
-    presets = PRESETS if args.target == "all" else [args.target]
-    for preset in presets:
-        run(ACTIONS[args.action](preset))
+    run_cmake(args.action, args.target)
 
 
 if __name__ == "__main__":

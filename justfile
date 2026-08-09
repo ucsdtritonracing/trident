@@ -2,7 +2,7 @@
 pwd := `pwd`
 
 configure target="all":
-    python3 tools/cmake_target.py configure {{target}}
+    uv run python tools/cmake_target.py configure {{target}}
 
 
 compile-commands:
@@ -13,12 +13,12 @@ compile-commands:
 
 
 build target="all": (configure target)
-    python3 tools/cmake_target.py build {{target}}
+    uv run python tools/cmake_target.py build {{target}}
     just compile-commands
 
 
 clean target="all":
-    python3 tools/cmake_target.py clean {{target}}
+    uv run python tools/cmake_target.py clean {{target}}
 
 
 run app: (build "host")
@@ -27,8 +27,8 @@ run app: (build "host")
 
 
 format-check target="all":
-    python3 tools/lint.py check {{target}}
+    uv run python tools/lint.py check {{target}}
 
 
 format target="all":
-    python3 tools/lint.py fix {{target}}
+    uv run python tools/lint.py fix {{target}}
