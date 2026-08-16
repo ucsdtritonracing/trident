@@ -27,8 +27,7 @@ CPP_EXCLUDE_DIRS = {
     "node_modules",
     "dist",
     "site-packages",
-    "embedded/boards/compute_module/cubemx/Core",
-    "embedded/boards/compute_module/cubemx/Drivers",
+    "embedded/boards/compute_module/cubemx",
 }
 
 # Headers never appear as their own entry in compile_commands.json (nothing

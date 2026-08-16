@@ -47,7 +47,7 @@ _FRAMEWORK_SUFFIX_RE = re.compile(r"\s*\(framework directory\)\s*$")
 
 
 def host_args() -> list[str]:
-    if platform.system() != "Darwin":
+    if platform.system() != "Darwin": # for macOS: lacks a default /usr/include; other platforms fine
         return []
 
     try:
