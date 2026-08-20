@@ -25,6 +25,12 @@ run app: (build "host")
     @printf "\n"
     ./build/host/embedded/app/{{app}}/{{app}}
 
+format-check target = "all":
+    uv run python tools/lint.py check {{target}}
+
+format target = "all":
+    uv run python tools/lint.py fix {{target}}
+
 
 test: (build "host")
     tests/.venv/bin/pytest tests/integration -v
