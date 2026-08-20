@@ -45,3 +45,7 @@ clean target="all":
 run app: (build "host")
     @printf "\n"
     ./build/host/embedded/app/{{app}}/{{app}}
+
+
+test: (build "host")
+    tests/.venv/bin/pytest tests/integration -v
