@@ -2,6 +2,4 @@
 
 #include "platform.h"
 
-void Platform::Init() {
-    printf("Running on host!\n");
-}
+void Platform::Init() { printf("Running on host!\n"); }
