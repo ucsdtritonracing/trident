@@ -2,4 +2,26 @@
     "clangd.arguments": [
         "--query-driver=**/arm-none-eabi-*,**/g++*,**/gcc*"
     ],
+    "terminal.integrated.profiles.windows": {
+        "Pixi (Git Bash)": {
+            "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+            "args": [
+                "-l",
+                "-c",
+                "VSCODE_CWD='${workspaceFolder}' exec ./tools/scripts/vscode-shell.sh"
+            ]
+        }
+    },
+    "terminal.integrated.profiles.osx": {
+        "Pixi (macOS)": {
+            "path": "/bin/bash",
+            "args": [
+                "-l",
+                "-c",
+                "VSCODE_CWD='${workspaceFolder}' exec ./tools/scripts/vscode-shell.sh"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "Pixi (Git Bash)",
+    "terminal.integrated.defaultProfile.osx": "Pixi (macOS)"
 }
