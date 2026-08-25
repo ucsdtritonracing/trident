@@ -28,6 +28,7 @@ CPP_EXCLUDE_DIRS = {
     "dist",
     "site-packages",
     "embedded/boards/compute_module/cubemx",
+    ".pixi",
 }
 
 # Headers never appear as their own entry in compile_commands.json (nothing
