@@ -75,3 +75,6 @@ __pycache__/
 
 # Pixi
 .pixi/
+
+# Linting
+.ruff_cache
