@@ -25,6 +25,7 @@ into a shell variable, e.g.:
 
 import argparse
 import json
+import os
 import platform
 import re
 import shlex
@@ -44,6 +45,8 @@ _DROP_VALUELESS_DEP_FLAGS = {"-MD", "-MMD"}
 _SEARCH_START_RE = re.compile(r"search starts here:?\s*$")
 _SEARCH_END_RE = re.compile(r"^End of search list\.?\s*$")
 _FRAMEWORK_SUFFIX_RE = re.compile(r"\s*\(framework directory\)\s*$")
+
+IS_WINDOWS = os.name == "nt"
 
 
 def host_args() -> list[str]:
@@ -71,7 +74,7 @@ def _probe_args_from_compile_entry(entry: dict) -> list[str]:
     entry's command, leaving the compiler + target/std/define flags so we
     can reuse them to probe default include dirs (`-E -Wp,-v`).
     """
-    argv = shlex.split(entry["command"])
+    argv = shlex.split(entry["command"], posix=not IS_WINDOWS)
     source_file = entry.get("file", "")
 
     kept: list[str] = []
@@ -125,7 +128,7 @@ def stm32_args(compile_commands_path: Path) -> list[str]:
         sys.exit(1)
 
     entry = db[0]
-    compiler = shlex.split(entry["command"])[0]
+    compiler = shlex.split(entry["command"], posix=not IS_WINDOWS)[0]
     if not shutil.which(compiler) and not Path(compiler).exists():
         print(f"error: compiler '{compiler}' not found", file=sys.stderr)
         sys.exit(1)

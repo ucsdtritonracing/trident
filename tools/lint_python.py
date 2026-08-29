@@ -3,7 +3,16 @@
 
 from lint_common import find_files, run, run_batched
 
-PY_EXCLUDE_DIRS = {"build", ".git", ".venv", "venv", "node_modules", "dist", "site-packages"}
+PY_EXCLUDE_DIRS = {
+    "build",
+    ".git",
+    ".venv",
+    "venv",
+    "node_modules",
+    "dist",
+    "site-packages",
+    ".pixi",
+}
 
 _RUFF = ["uv", "run", "--extra", "dev", "ruff"]
 
