@@ -1,9 +1,10 @@
-# Specify board configuration
-# e.g. -DREAR_BOARD=other_board_directory_name
-# Default to compute_module
-set(REAR_BOARD "compute_module" CACHE STRING "Board/pinout used for the rear app")
+# Core logic
+add_library(rear_core STATIC main_rear.cpp)
+target_link_libraries(rear_core PUBLIC platform_interface)
 
-add_platform_executable(rear
-    BOARD ${REAR_BOARD}
-    SOURCES app_rear.cpp
-)
+# Executable entry point
+add_executable(rear main_rear.cpp)
+target_link_libraries(rear PRIVATE rear_core)
+
+# Use the helper function to link the selected platform (stm32 vs host)
+target_link_platform(rear)

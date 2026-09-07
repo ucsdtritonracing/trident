@@ -1,6 +1,8 @@
 {
     "clangd.arguments": [
-        "--query-driver=**/arm-none-eabi-*,**/g++*,**/gcc*"
+        "--enable-config",
+        "--background-index",
+        "--query-driver=**/arm-none-eabi-*,**/g++*,**/gcc*,**/c++*,**/cpp*",
     ],
     "terminal.integrated.profiles.windows": {
         "Pixi (Git Bash)": {

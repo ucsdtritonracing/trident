@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 DEFAULT_BUILD_DIRS = ["build/stm32", "build/host"]
-DEFAULT_OUTPUT = "compile_commands.json"
+DEFAULT_OUTPUT = "build/compile_commands.json"
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
