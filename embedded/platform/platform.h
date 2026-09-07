@@ -1,7 +1,14 @@
 #pragma once
 
+#include "can.h"
+
 namespace Platform {
 
-void Init();
-
+struct Context {
+    Can::Peripheral& can1;
+    Can::Peripheral& can2;
 };
+
+Context Init();
+
+}

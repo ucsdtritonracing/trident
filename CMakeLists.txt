@@ -7,9 +7,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# add_subdirectory(embedded/platform)
-# add_subdirectory(embedded/app/front)
-# add_subdirectory(embedded/app/rear)
+# Find third party host packages
+if(NOT CMAKE_CROSSCOMPILING)
+    find_package(cppzmq REQUIRED)
+endif()
 
 # Always build the embedded folder
 add_subdirectory(embedded)
