@@ -11,4 +11,4 @@ public:
     BusState GetStatus() override;
 };
 
-}
+} // namespace Platform::Can

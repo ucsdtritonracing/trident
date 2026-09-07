@@ -37,4 +37,4 @@ public:
     virtual BusState GetStatus() = 0;
 };
 
-}
+} // namespace Platform::Can

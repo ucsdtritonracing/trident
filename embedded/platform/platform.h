@@ -11,4 +11,4 @@ struct Context {
 
 Context Init();
 
-}
+} // namespace Platform

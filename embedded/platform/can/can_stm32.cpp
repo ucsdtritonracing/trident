@@ -4,16 +4,10 @@
 
 namespace Platform::Can {
 
-SendStatus Stm32Peripheral::Send(const Message& message) {
-    return SendStatus::ERROR;
-}
+SendStatus Stm32Peripheral::Send(const Message& message) { return SendStatus::ERROR; }
 
-PollStatus Stm32Peripheral::Poll(Message& out) {
-    return PollStatus::ERROR;
-}
+PollStatus Stm32Peripheral::Poll(Message& out) { return PollStatus::ERROR; }
 
-BusState Stm32Peripheral::GetStatus() {
-    return BusState::BUS_OFF;
-}
+BusState Stm32Peripheral::GetStatus() { return BusState::BUS_OFF; }
 
-}
+} // namespace Platform::Can

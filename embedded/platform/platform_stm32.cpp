@@ -3,11 +3,14 @@
 #include "platform.h"
 #include "can_stm32.h"
 
-// Store global instances of the peripherals in a private namespace to limit access to just the context object.
+// Store global instances of the peripherals in a private namespace to limit access to just the
+// context object.
 namespace {
-    Platform::Can::Stm32Peripheral can1;
-    Platform::Can::Stm32Peripheral can2;
-}
+
+Platform::Can::Stm32Peripheral can1;
+Platform::Can::Stm32Peripheral can2;
+
+} // namespace
 
 namespace Platform {
 
@@ -23,9 +26,10 @@ Context Init() {
     };
 }
 
-}
+} // namespace Platform
 
-// Implement syscalls required by C library but not provided by STM32 HAL. These are just stubs for now, and should be implemented properly if needed.
+// Implement syscalls required by C library but not provided by STM32 HAL. These are just stubs for
+// now, and should be implemented properly if needed.
 extern "C" {
 
 int _close(int file) { return -1; }

@@ -16,4 +16,4 @@ private:
     zmq::context_t zmq_ctx{1};
 };
 
-}
+} // namespace Platform::Can
