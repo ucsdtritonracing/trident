@@ -13,7 +13,7 @@ public:
     BusState GetStatus() override;
 
 private:
-    zmq::context_t context{1};
+    zmq::context_t zmq_ctx{1};
 };
 
 }
