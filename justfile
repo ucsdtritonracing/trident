@@ -13,8 +13,13 @@ configure target="all":
     uv run python tools/cmake_target.py configure {{target}}
 
 
-compile-commands:
-    # combine compile_commands.json and write to root
+compile-commands-host:
+    uv run python tools/generators/merge_compile_commands.py \
+    -b {{pwd}}/build/host \
+    -b {{pwd}}/build/stm32
+
+
+compile-commands-stm32:
     uv run python tools/generators/merge_compile_commands.py \
     -b {{pwd}}/build/stm32 \
     -b {{pwd}}/build/host
@@ -22,7 +27,6 @@ compile-commands:
 
 build target="all": (configure target)
     uv run python tools/cmake_target.py build {{target}}
-    just compile-commands
 
 
 clean target="all":
