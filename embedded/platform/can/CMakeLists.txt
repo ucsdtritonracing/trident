@@ -18,7 +18,7 @@ else()
     target_sources(can PRIVATE can_host.cpp)
 
     # Link third party host packages
-    target_link_libraries(can PRIVATE
+    target_link_libraries(can PUBLIC
         cppzmq
     )
 endif()
