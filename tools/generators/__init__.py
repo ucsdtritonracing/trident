@@ -1,1 +1,0 @@
-COMPILE_COMMANDS_PATH = "build/compile_commands.json"

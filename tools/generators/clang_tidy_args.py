@@ -26,14 +26,14 @@ into a shell variable, e.g.:
 import argparse
 import json
 import os
-import platform
 import re
 import shlex
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-from generators import COMPILE_COMMANDS_PATH
+
+from tools import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH
 
 # Flags to drop when turning a real compile command into an "ask the
 # compiler for its default include dirs" probe command: we want the same
@@ -47,65 +47,13 @@ _SEARCH_START_RE = re.compile(r"search starts here:?\s*$")
 _SEARCH_END_RE = re.compile(r"^End of search list\.?\s*$")
 _FRAMEWORK_SUFFIX_RE = re.compile(r"\s*\(framework directory\)\s*$")
 
-IS_WINDOWS = os.name == "nt"
-
-
-def host_args(compile_commands_path: Path) -> list[str]:
-    if not compile_commands_path.exists():
-        print(
-            f"error: {compile_commands_path} not found; run `just configure host` first",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    db = json.loads(compile_commands_path.read_text())
-    if not db:
-        print(f"error: {compile_commands_path} is empty", file=sys.stderr)
-        sys.exit(1)
-
-    entry = db[0]
-    compiler = shlex.split(entry["command"], posix=not IS_WINDOWS)[0]
-    if not shutil.which(compiler) and not Path(compiler).exists():
-        print(f"error: compiler '{compiler}' not found", file=sys.stderr)
-        sys.exit(1)
-
-    probe_cmd = [*_probe_args_from_compile_entry(entry), "-E", "-Wp,-v", "-x", "c++", "-"]
-    result = subprocess.run(
-        probe_cmd,
-        input="",
-        capture_output=True,
-        text=True,
-        cwd=entry.get("directory"),
-    )
-
-    args = []
-
-    if platform.system() == "Darwin":  # for macOS: lacks a default /usr/include
-        try:
-            sdk_path = subprocess.run(
-                ["xcrun", "--show-sdk-path"],
-                check=True,
-                capture_output=True,
-                text=True,
-            ).stdout.strip()
-            if sdk_path:
-                args.append(f"--extra-arg=--sysroot={sdk_path}")
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            pass
-
-    # Append all discovered implicit include directories
-    for inc_dir in _parse_include_dirs(result.stdout + result.stderr):
-        args.append(f"--extra-arg=-isystem{inc_dir}")
-
-    return args
-
 
 def _probe_args_from_compile_entry(entry: dict) -> list[str]:
     """Strip the "compile an object file" parts of a compile_commands.json
     entry's command, leaving the compiler + target/std/define flags so we
     can reuse them to probe default include dirs (`-E -Wp,-v`).
     """
-    argv = shlex.split(entry["command"], posix=not IS_WINDOWS)
+    argv = shlex.split(entry["command"], posix=os.name == "posix")
     source_file = entry.get("file", "")
 
     kept: list[str] = []
@@ -145,10 +93,13 @@ def _parse_include_dirs(cpp_verbose_output: str) -> list[str]:
     return sorted(dirs)
 
 
-def stm32_args(compile_commands_path: Path) -> list[str]:
+def _run_compiler_probe(compile_commands_path: Path) -> str:
+    """Extracts the first compile command, runs the preprocessor probe,
+    and returns the compiler's stderr containing the include paths.
+    """
     if not compile_commands_path.exists():
         print(
-            f"error: {compile_commands_path} not found; run `just configure stm32` first",
+            f"error: {compile_commands_path} not found; run `just configure` first",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -159,7 +110,7 @@ def stm32_args(compile_commands_path: Path) -> list[str]:
         sys.exit(1)
 
     entry = db[0]
-    compiler = shlex.split(entry["command"], posix=not IS_WINDOWS)[0]
+    compiler = shlex.split(entry["command"], posix=os.name == "posix")[0]
     if not shutil.which(compiler) and not Path(compiler).exists():
         print(f"error: compiler '{compiler}' not found", file=sys.stderr)
         sys.exit(1)
@@ -173,9 +124,44 @@ def stm32_args(compile_commands_path: Path) -> list[str]:
         cwd=entry.get("directory"),
     )
 
-    args = ["--extra-arg=--target=arm-none-eabi"]
-    for inc_dir in _parse_include_dirs(result.stdout + result.stderr):
+    # The include search paths are only printed to stderr
+    return result.stderr
+
+
+def host_args(compile_commands_path: Path = COMPILE_COMMANDS_HOST_PATH) -> list[str]:
+    probe_stderr = _run_compiler_probe(compile_commands_path)
+    args = []
+
+    if sys.platform == "darwin":
+        try:
+            sdk_path = subprocess.run(
+                ["xcrun", "--show-sdk-path"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            if sdk_path:
+                args.append(f"--extra-arg=--sysroot={sdk_path}")
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            pass
+    elif sys.platform == "win32":
+        args.append("--extra-arg=--target=x86_64-w64-mingw32")
+    elif sys.platform == "cygwin":
+        args.append("--extra-arg=--target=x86_64-pc-cygwin")
+
+    for inc_dir in _parse_include_dirs(probe_stderr):
         args.append(f"--extra-arg=-isystem{inc_dir}")
+
+    return args
+
+
+def stm32_args(compile_commands_path: Path = COMPILE_COMMANDS_STM32_PATH) -> list[str]:
+    probe_stderr = _run_compiler_probe(compile_commands_path)
+    args = ["--extra-arg=--target=arm-none-eabi"]
+
+    for inc_dir in _parse_include_dirs(probe_stderr):
+        args.append(f"--extra-arg=-isystem{inc_dir}")
+
     return args
 
 
@@ -185,9 +171,9 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.target == "host":
-        extra_args = host_args(Path(COMPILE_COMMANDS_PATH))
+        extra_args = host_args()
     else:
-        extra_args = stm32_args(Path(COMPILE_COMMANDS_PATH))
+        extra_args = stm32_args()
 
     print(" ".join(extra_args))
 
