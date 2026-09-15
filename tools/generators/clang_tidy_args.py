@@ -33,6 +33,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from generators import COMPILE_COMMANDS_PATH
 
 # Flags to drop when turning a real compile command into an "ask the
 # compiler for its default include dirs" probe command: we want the same
@@ -49,24 +50,54 @@ _FRAMEWORK_SUFFIX_RE = re.compile(r"\s*\(framework directory\)\s*$")
 IS_WINDOWS = os.name == "nt"
 
 
-def host_args() -> list[str]:
-    if platform.system() != "Darwin":  # for macOS: lacks a default /usr/include
-        return []
+def host_args(compile_commands_path: Path) -> list[str]:
+    if not compile_commands_path.exists():
+        print(
+            f"error: {compile_commands_path} not found; run `just configure host` first",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
-    try:
-        sdk_path = subprocess.run(
-            ["xcrun", "--show-sdk-path"],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return []
+    db = json.loads(compile_commands_path.read_text())
+    if not db:
+        print(f"error: {compile_commands_path} is empty", file=sys.stderr)
+        sys.exit(1)
 
-    if not sdk_path:
-        return []
+    entry = db[0]
+    compiler = shlex.split(entry["command"], posix=not IS_WINDOWS)[0]
+    if not shutil.which(compiler) and not Path(compiler).exists():
+        print(f"error: compiler '{compiler}' not found", file=sys.stderr)
+        sys.exit(1)
 
-    return [f"--extra-arg=--sysroot={sdk_path}"]
+    probe_cmd = [*_probe_args_from_compile_entry(entry), "-E", "-Wp,-v", "-x", "c++", "-"]
+    result = subprocess.run(
+        probe_cmd,
+        input="",
+        capture_output=True,
+        text=True,
+        cwd=entry.get("directory"),
+    )
+
+    args = []
+
+    if platform.system() == "Darwin":  # for macOS: lacks a default /usr/include
+        try:
+            sdk_path = subprocess.run(
+                ["xcrun", "--show-sdk-path"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            if sdk_path:
+                args.append(f"--extra-arg=--sysroot={sdk_path}")
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            pass
+
+    # Append all discovered implicit include directories
+    for inc_dir in _parse_include_dirs(result.stdout + result.stderr):
+        args.append(f"--extra-arg=-isystem{inc_dir}")
+
+    return args
 
 
 def _probe_args_from_compile_entry(entry: dict) -> list[str]:
@@ -154,9 +185,9 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.target == "host":
-        extra_args = host_args()
+        extra_args = host_args(Path(COMPILE_COMMANDS_PATH))
     else:
-        extra_args = stm32_args(Path("build/stm32/compile_commands.json"))
+        extra_args = stm32_args(Path(COMPILE_COMMANDS_PATH))
 
     print(" ".join(extra_args))
 

@@ -12,9 +12,10 @@ import json
 import logging
 import sys
 from pathlib import Path
+from generators import COMPILE_COMMANDS_PATH
 
 DEFAULT_BUILD_DIRS = ["build/stm32", "build/host"]
-DEFAULT_OUTPUT = "build/compile_commands.json"
+DEFAULT_OUTPUT = COMPILE_COMMANDS_PATH
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
