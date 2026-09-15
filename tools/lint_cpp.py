@@ -15,10 +15,9 @@ silently skipped.
 import json
 from pathlib import Path
 
-from generators.clang_tidy_args import host_args, stm32_args
-from lint_common import find_files, run, run_batched
-
 from tools import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH, REPO_ROOT
+from tools.generators.clang_tidy_args import host_args, stm32_args
+from tools.lint_common import find_files, run, run_batched
 
 CPP_EXTENSIONS = {".cpp", ".cc", ".cxx", ".c", ".h", ".hpp"}
 CPP_EXCLUDE_DIRS = {
