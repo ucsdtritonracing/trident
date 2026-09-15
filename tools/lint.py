@@ -19,9 +19,9 @@ touching the other.
 import argparse
 import sys
 
-from cmake_target import run_cmake
-from lint_cpp import cpp_check, cpp_fix
-from lint_python import python_check, python_fix
+from tools.cmake_target import run_cmake
+from tools.lint_cpp import cpp_check, cpp_fix
+from tools.lint_python import python_check, python_fix
 
 
 def _check(target: str) -> bool:

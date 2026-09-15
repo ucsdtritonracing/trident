@@ -13,8 +13,7 @@ import logging
 import sys
 from pathlib import Path
 
-DEFAULT_BUILD_DIRS = ["build/stm32", "build/host"]
-DEFAULT_OUTPUT = "compile_commands.json"
+from tools import COMPILE_COMMANDS_OUTPUT_PATH
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -31,21 +30,20 @@ def parse_args() -> argparse.Namespace:
         action="append",
         dest="build_dirs",
         metavar="DIR",
+        required=True,
         help="Build directory containing a compile_commands.json. Can be given "
         "multiple times. Relative paths are resolved from the current "
-        f"working directory. Defaults to: {', '.join(DEFAULT_BUILD_DIRS)}",
+        "working directory.",
     )
     parser.add_argument(
         "-o",
         "--output",
-        default=DEFAULT_OUTPUT,
+        default=COMPILE_COMMANDS_OUTPUT_PATH,
         metavar="PATH",
-        help=f"Output file path, relative to cwd unless absolute. Default: {DEFAULT_OUTPUT}",
+        help="Output file path, relative to cwd unless absolute.",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output.")
     args = parser.parse_args()
-    if not args.build_dirs:
-        args.build_dirs = DEFAULT_BUILD_DIRS
     return args
 
 
