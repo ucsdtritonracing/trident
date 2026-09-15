@@ -3,8 +3,8 @@
 #include "platform.h"
 #include "can_stm32.h"
 
-// Store global instances of the peripherals in a private namespace to limit access to just the
-// context object.
+// Store global instances of the peripherals in a private namespace.
+// Limits peripheral access to just the context object.
 namespace {
 
 Platform::Can::Stm32Peripheral can1;
