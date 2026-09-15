@@ -6,9 +6,9 @@ install:
 
 
 wipe:
-    @rm -rf build
-    @rm -rf .cache
-    @rm -rf .venv
+    rm -rf build
+    rm -rf .cache
+    rm -rf .venv
 
 
 configure target="all":
