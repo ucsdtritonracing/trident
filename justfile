@@ -1,6 +1,9 @@
 # print working directory variable
 pwd := `pwd`
 
+install:
+    ./tools/scripts/install.sh
+
 
 wipe:
     @rm -rf build
@@ -8,7 +11,6 @@ wipe:
     @rm -rf .venv
 
 
-[script]
 configure target="all":
     uv run python tools/cmake_target.py configure {{target}}
 
@@ -37,8 +39,10 @@ run app: (build "host")
     @printf "\n"
     ./build/host/embedded/app/{{app}}/{{app}}
 
+
 format-check target = "all":
     uv run python tools/lint.py check {{target}}
+
 
 format target = "all":
     uv run python tools/lint.py fix {{target}}
