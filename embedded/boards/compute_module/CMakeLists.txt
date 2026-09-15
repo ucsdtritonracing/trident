@@ -5,7 +5,7 @@ set(CMAKE_PROJECT_NAME board_hal)
 # Create the target that CubeMX will automatically populate
 add_library(${CMAKE_PROJECT_NAME} STATIC)
 
-# Include CubeMX's CMake. It will attach all sources and include paths to our 'board_hal' target.
+# Include CubeMX's CMake. It will attach all sources and include paths to the 'board_hal' target.
 add_subdirectory(cubemx/cmake/stm32cubemx)
 
 # Restore the original project name
