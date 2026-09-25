@@ -15,8 +15,9 @@ silently skipped.
 import json
 from pathlib import Path
 
-from generators.clang_tidy_args import host_args, stm32_args
-from lint_common import REPO_ROOT, find_files, run, run_batched
+from tools import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH, REPO_ROOT
+from tools.generators.clang_tidy_args import host_args, stm32_args
+from tools.lint_common import find_files, run, run_batched
 
 CPP_EXTENSIONS = {".cpp", ".cc", ".cxx", ".c", ".h", ".hpp"}
 CPP_EXCLUDE_DIRS = {
@@ -104,8 +105,8 @@ def cpp_check() -> bool:
             ok = False
 
     all_rel_files = {p.relative_to(REPO_ROOT) for p in cpp_files}
-    host_files = _db_files(REPO_ROOT / "build/host/compile_commands.json")
-    stm32_files = _db_files(REPO_ROOT / "build/stm32/compile_commands.json")
+    host_files = _db_files(COMPILE_COMMANDS_HOST_PATH)
+    stm32_files = _db_files(COMPILE_COMMANDS_STM32_PATH)
     _warn_untracked(all_rel_files, host_files | stm32_files)
 
     print("Linting host code with build/host compile database...")
@@ -115,7 +116,7 @@ def cpp_check() -> bool:
             ok = False
 
     print("Linting STM32 code with build/stm32 compile database...")
-    extra_args = stm32_args(REPO_ROOT / "build/stm32/compile_commands.json")
+    extra_args = stm32_args()
     for source_file in sorted(stm32_files):
         if run(["clang-tidy", "-p", "build/stm32", *extra_args, str(source_file)]) != 0:
             ok = False

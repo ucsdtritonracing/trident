@@ -1,36 +1,34 @@
-if(NOT CMAKE_CROSSCOMPILING)
-    add_subdirectory(host)
-endif()
+# Platform interface library, just containing headers
+add_library(platform_interface INTERFACE)
+target_include_directories(platform_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Make subdirectories visible to CMake before linking
+add_subdirectory(can)
+
+# Add headers to the platform interface library
+target_link_libraries(platform_interface INTERFACE
+    can_interface
+)
+
 if(CMAKE_CROSSCOMPILING)
-    add_subdirectory(stm32)
+    # Platform STM32 implementation
+    # Links CubeMX generated code
+    add_library(platform STATIC platform_stm32.cpp)
+    target_link_libraries(platform PRIVATE board_hal)
+else()
+    # Platform host implementation
+    add_library(platform STATIC platform_host.cpp)
 endif()
 
-# add_platform_executable(name BOARD board_name SOURCES src1 [src2 ...])
-# BOARD is only meaningful (and required) when cross-compiling.
-function(add_platform_executable name)
-    cmake_parse_arguments(ARG "" "BOARD" "SOURCES" ${ARGN})
+target_link_libraries(platform PRIVATE
+    # Required implementation libraries
+    can
+)
 
-    add_executable(${name} ${ARG_SOURCES})
+# Add as include directories to allow #include "FILE_NAME" without paths
+target_include_directories(platform_interface INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/can
+)
 
-    if(CMAKE_CROSSCOMPILING)
-        if(NOT ARG_BOARD)
-            message(FATAL_ERROR "add_platform_executable(${name}): BOARD is required when cross-compiling")
-        endif()
-
-        create_stm32_platform_lib(${ARG_BOARD})
-        target_link_libraries(${name} PRIVATE platform_stm32_${ARG_BOARD})
-
-        set(board_cubemx_dir ${CMAKE_SOURCE_DIR}/embedded/boards/${ARG_BOARD}/cubemx)
-        target_sources(${name} PRIVATE ${board_cubemx_dir}/startup_stm32g474xx.s)
-        target_link_options(${name} PRIVATE
-            -T${board_cubemx_dir}/STM32G474xx_FLASH.ld
-            -Wl,-Map=${name}.map
-        )
-        add_custom_command(TARGET ${name} POST_BUILD
-            COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${name}> ${name}.bin
-            COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${name}>
-        )
-    else()
-        target_link_libraries(${name} PRIVATE platform_host)
-    endif()
-endfunction()
+# Link platform implementation to the platform interface library
+target_link_libraries(platform PUBLIC platform_interface)
