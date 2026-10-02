@@ -1,0 +1,11 @@
+[workspace]
+authors = ["okhiokbye <242526231+transparentglass2507@users.noreply.github.com>"]
+channels = ["conda-forge"]
+name = "odyssey"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+pyzmq = ">=27.2.0,<28"
