@@ -23,5 +23,6 @@
         }
     },
     "terminal.integrated.defaultProfile.windows": "Pixi (Git Bash)",
-    "terminal.integrated.defaultProfile.osx": "Pixi (macOS)"
+    "terminal.integrated.defaultProfile.osx": "Pixi (macOS)",
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }
