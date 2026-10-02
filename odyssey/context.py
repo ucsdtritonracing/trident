@@ -17,9 +17,9 @@ class Context:
         dataOut = context.socket(zmq.PUB)
         dataIn = context.socket(zmq.SUB)
         command = context.socket(zmq.REQ)
-    # Sends a CAN message with the given parameters
-    def sendSimCAN(id,data):
+    """Sends a CAN message"""
+    def sendSimCAN(message):
         return 
-    # Copies the message and returns a QueueStatus
+    """Stores the message into the provided buffer and returns a QueueStatus"""
     def pollSimCAN(bus, message):
         return
