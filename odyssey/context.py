@@ -18,9 +18,9 @@ class Message:
 class Context:
     def __init__(self):
         context = zmq.Context()
-        data_out = context.socket(zmq.PUB)
-        data_in = context.socket(zmq.SUB)
-        command = context.socket(zmq.REQ)
+        data_out = context.socket(zmq.PUB)  # ruff: ignore[F841]
+        data_in = context.socket(zmq.SUB)  # ruff: ignore[F841]
+        command = context.socket(zmq.REQ)  # ruff: ignore[F841]
 
     """Sends a CAN message"""
 
