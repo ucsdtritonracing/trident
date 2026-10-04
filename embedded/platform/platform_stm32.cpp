@@ -7,8 +7,8 @@
 // Limits peripheral access to just the context object.
 namespace {
 
-Platform::Can::Stm32Peripheral can1;
-Platform::Can::Stm32Peripheral can2;
+Platform::Can::Stm32Peripheral can1{};
+Platform::Can::Stm32Peripheral can2{};
 
 } // namespace
 
@@ -16,9 +16,6 @@ namespace Platform {
 
 Context Init() {
     printf("Running on STM32!\n");
-
-    can1 = Can::Stm32Peripheral{};
-    can2 = Can::Stm32Peripheral{};
 
     return Context{
         .can1 = can1,
