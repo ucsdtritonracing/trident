@@ -18,16 +18,16 @@ class Message:
 class Context:
     def __init__(self):
         context = zmq.Context()
-        dataOut = context.socket(zmq.PUB)
-        dataIn = context.socket(zmq.SUB)
+        data_out = context.socket(zmq.PUB)
+        data_in = context.socket(zmq.SUB)
         command = context.socket(zmq.REQ)
 
     """Sends a CAN message"""
 
-    def sendSimCAN(message):
+    def send_sim_can(self, message):
         return
 
     """Stores the message into the provided buffer and returns a QueueStatus"""
 
-    def pollSimCAN(bus, message):
+    def poll_sim_can(self, bus, message):
         return

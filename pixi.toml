@@ -16,4 +16,4 @@ gcc = "*"
 gxx = "*"
 zeromq = "*"
 cppzmq = "*"
-pyzmq = ">=27.2.0,<28"
+
