@@ -4478,12 +4478,12 @@ packages:
   - pyzmq
   requires_python: '>=3.11'
 - pypi: ./tests
-  name: trident-tests
+  name: tests
   requires_dist:
   - pytest
   requires_python: '>=3.11'
 - pypi: ./tools
-  name: trident-tools
+  name: tools
   requires_python: '>=3.11'
 - pypi: https://files.pythonhosted.org/packages/02/8b/b83f7780dad22e0878e4c7bd9158ebd24ed12bc3d5e3a471cd0576f77ded/pyzmq-27.2.0-cp312-abi3-win_amd64.whl
   name: pyzmq
