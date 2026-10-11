@@ -3,13 +3,6 @@ name = "trident"
 version = "0.1.0"
 channels = ["conda-forge", "memfault"]
 platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
-members = [
-    "odyssey",
-    "tools",
-    "tests",
-]
-
-[tasks]
 
 [dependencies]
 # C++ dependencies
@@ -22,10 +15,15 @@ zeromq = "*"
 cppzmq = "*"
 pkg-config = "*"
 clang-tools = "*"
-
 # Python dependencies
+python = ">=3.11"
 uv = "*"
 ruff = ">=0.1.60"
-
 # Developer dependencies
 just = "*"
+
+[pypi-dependencies]
+# Pull in your Python subprojects as editable path dependencies
+odyssey = { path = "odyssey", editable = true }
+trident-tools = { path = "tools", editable = true }
+trident-tests = { path = "tests", editable = true }
