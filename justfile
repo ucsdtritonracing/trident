@@ -12,27 +12,27 @@ wipe:
 
 
 configure target="all":
-    python -m linter.cmake_target configure {{target}}
+    python -m tools.linter.cmake_target configure {{target}}
 
 
 compile-commands-host:
-    python -m generators.merge_compile_commands \
+    python -m tools.generators.merge_compile_commands \
     -b {{pwd}}/build/host \
     -b {{pwd}}/build/stm32
 
 
 compile-commands-stm32:
-    python -m generators.merge_compile_commands \
+    python -m tools.generators.merge_compile_commands \
     -b {{pwd}}/build/stm32 \
     -b {{pwd}}/build/host
 
 
 build target="all": (configure target)
-    python -m linter.cmake_target build {{target}}
+    python -m tools.linter.cmake_target build {{target}}
 
 
 clean target="all":
-    python -m linter.cmake_target clean {{target}}
+    python -m tools.linter.cmake_target clean {{target}}
 
 
 run app: (build "host")
@@ -41,11 +41,11 @@ run app: (build "host")
 
 
 format-check target = "all":
-    python -m linter.lint check {{target}}
+    python -m tools.linter.lint check {{target}}
 
 
 format target = "all":
-    python -m linter.lint fix {{target}}
+    python -m tools.linter.lint fix {{target}}
 
 
 test: (build "host")

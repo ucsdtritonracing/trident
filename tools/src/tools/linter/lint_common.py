@@ -9,7 +9,7 @@ other's modules.
 import subprocess
 from pathlib import Path
 
-from tools import REPO_ROOT
+from tools.core import REPO_ROOT
 
 # Directory names excluded at any depth when walking the tree for files.
 COMMON_EXCLUDE_DIRS = {"build", ".git", ".venv", "venv", "node_modules", "dist", "site-packages"}
