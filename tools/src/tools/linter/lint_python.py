@@ -14,8 +14,6 @@ PY_EXCLUDE_DIRS = {
     ".pixi",
 }
 
-_RUFF = ["uv", "run", "--extra", "dev", "ruff"]
-
 
 def python_check() -> bool:
     py_files = list(map(str, find_files({".py"}, PY_EXCLUDE_DIRS)))
@@ -24,12 +22,12 @@ def python_check() -> bool:
 
     ok = True
     print("Checking Python formatting...")
-    fmt_cmd = [*_RUFF, "format", "--check", "--diff", "--config", "pyproject.toml"]
+    fmt_cmd = ["ruff", "format", "--check", "--diff"]
     if not run_batched(fmt_cmd, py_files):
         ok = False
 
     print("Checking Python lint...")
-    lint_cmd = [*_RUFF, "check", "--config", "pyproject.toml"]
+    lint_cmd = ["ruff", "check"]
     if not run_batched(lint_cmd, py_files):
         ok = False
 
@@ -42,7 +40,7 @@ def python_fix() -> None:
         return
 
     print("Formatting Python files...")
-    run([*_RUFF, "format", "--config", "pyproject.toml", *py_files])
+    run(["ruff", "format", *py_files])
 
     print("Applying safe Python lint fixes...")
-    run([*_RUFF, "check", "--fix", "--config", "pyproject.toml", *py_files])
+    run(["ruff", "check", "--fix", *py_files])
