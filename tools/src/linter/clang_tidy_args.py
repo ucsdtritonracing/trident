@@ -33,7 +33,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tools.src.lint import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH
+from tools.src.linter import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH
 
 # Flags to drop when turning a real compile command into an "ask the
 # compiler for its default include dirs" probe command: we want the same

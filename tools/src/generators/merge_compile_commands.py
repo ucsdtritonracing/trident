@@ -13,7 +13,7 @@ import logging
 import sys
 from pathlib import Path
 
-from tools.src.lint import COMPILE_COMMANDS_OUTPUT_PATH
+from tools.src.linter import COMPILE_COMMANDS_OUTPUT_PATH
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(

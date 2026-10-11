@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Python formatting/lint: ruff format + ruff check, run via uv."""
 
-from tools.src.lint.lint_common import find_files, run, run_batched
+from tools.src.linter.lint_common import find_files, run, run_batched
 
 PY_EXCLUDE_DIRS = {
     "build",
