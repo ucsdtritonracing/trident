@@ -1,0 +1,14 @@
+[project]
+name = "trident-tools"
+version = "0.1.0"
+description = "Tools for the trident monorepo"
+requires-python = ">=3.11"
+dependencies = [
+    # add as needed, e.g.:
+    # "python-can>=4.3",
+    # "click>=8.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
