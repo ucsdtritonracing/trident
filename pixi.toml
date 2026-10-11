@@ -1,16 +1,20 @@
 [workspace]
-channels = ["conda-forge", "memfault"]
 name = "trident"
-platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
 version = "0.1.0"
+channels = ["conda-forge", "memfault"]
+platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
+members = [
+    "odyssey",
+    "tools",
+    "tests",
+]
 
 [tasks]
 
 [dependencies]
+# C++ dependencies
 cmake = ">=3.21"
 ninja = "*"
-just = "*"
-uv = "*"
 binutils = "*"
 gcc = "*"
 gxx = "*"
@@ -18,3 +22,10 @@ zeromq = "*"
 cppzmq = "*"
 pkg-config = "*"
 clang-tools = "*"
+
+# Python dependencies
+uv = "*"
+ruff = ">=0.1.60"
+
+# Developer dependencies
+just = "*"
