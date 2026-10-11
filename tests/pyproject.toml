@@ -1,5 +1,5 @@
 [project]
-name = "trident-tests"
+name = "tests"
 version = "0.1.0"
 description = "Test suite for the trident monorepo"
 requires-python = ">=3.11"

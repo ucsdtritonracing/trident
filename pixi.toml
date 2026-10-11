@@ -25,5 +25,5 @@ just = "*"
 [pypi-dependencies]
 # Pull in your Python subprojects as editable path dependencies
 odyssey = { path = "odyssey", editable = true }
-trident-tools = { path = "tools", editable = true }
-trident-tests = { path = "tests", editable = true }
+tools = { path = "tools", editable = true }
+tests = { path = "tests", editable = true }

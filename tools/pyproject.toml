@@ -1,5 +1,5 @@
 [project]
-name = "trident-tools"
+name = "tools"
 version = "0.1.0"
 description = "Tools for the trident monorepo"
 requires-python = ">=3.11"
