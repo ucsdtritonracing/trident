@@ -9,30 +9,31 @@ wipe:
     rm -rf build
     rm -rf .cache
     rm -rf .venv
+    rm -rf */.pytest_cache
 
 
 configure target="all":
-    uv run python -m tools.cmake_target configure {{target}}
+    python -m tools.linter.cmake_target configure {{target}}
 
 
 compile-commands-host:
-    uv run python -m tools.generators.merge_compile_commands \
+    python -m tools.generators.merge_compile_commands \
     -b {{pwd}}/build/host \
     -b {{pwd}}/build/stm32
 
 
 compile-commands-stm32:
-    uv run python -m tools.generators.merge_compile_commands \
+    python -m tools.generators.merge_compile_commands \
     -b {{pwd}}/build/stm32 \
     -b {{pwd}}/build/host
 
 
 build target="all": (configure target)
-    uv run python -m tools.cmake_target build {{target}}
+    python -m tools.linter.cmake_target build {{target}}
 
 
 clean target="all":
-    uv run python -m tools.cmake_target clean {{target}}
+    python -m tools.linter.cmake_target clean {{target}}
 
 
 run app: (build "host")
@@ -41,12 +42,12 @@ run app: (build "host")
 
 
 format-check target = "all":
-    uv run python -m tools.lint check {{target}}
+    python -m tools.linter.lint check {{target}}
 
 
 format target = "all":
-    uv run python -m tools.lint fix {{target}}
+    python -m tools.linter.lint fix {{target}}
 
 
 test: (build "host")
-    tests/.venv/bin/pytest tests/integration -v
+    pytest tests/integration -v
