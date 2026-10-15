@@ -10,8 +10,9 @@
 namespace {
 
 zmq::context_t zmq_ctx{1};
-Platform::Can::HostPeripheral can1{zmq_ctx};
-Platform::Can::HostPeripheral can2{zmq_ctx};
+Platform::Can::HostPeripheral can1{zmq_ctx, "tcp://127.0.0.1:8053", "tcp://127.0.0.1:8057"};
+
+Platform::Can::HostPeripheral can2{zmq_ctx, "", ""};
 
 } // namespace
 
