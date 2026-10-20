@@ -9,8 +9,6 @@ platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
 cmake = ">=3.21"
 ninja = "*"
 binutils = "*"
-gcc = "*"
-gxx = "*"
 zeromq = "*"
 cppzmq = "*"
 pkg-config = "*"
@@ -21,6 +19,10 @@ uv = "*"
 ruff = ">=0.1.60"
 # Developer dependencies
 just = "*"
+
+[target.win-64.dependencies]
+gcc = "*"
+gxx = "*"
 
 [pypi-dependencies]
 # Pull in your Python subprojects as editable path dependencies
