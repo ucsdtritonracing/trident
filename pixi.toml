@@ -24,6 +24,10 @@ just = "*"
 gcc = "*"
 gxx = "*"
 
+[target.linux-64.dependencies]
+gcc = "*"
+gxx = "*"
+
 [pypi-dependencies]
 # Pull in your Python subprojects as editable path dependencies
 odyssey = { path = "odyssey", editable = true }
