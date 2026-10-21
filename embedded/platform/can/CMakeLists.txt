@@ -3,16 +3,11 @@
 add_library(can_interface INTERFACE)
 target_link_libraries(can_interface INTERFACE trident_includes)
 
-# The concrete implementation library of the interface
-add_library(can STATIC)
+# The concrete implementation library of the interface, chosen by platform
+add_library(can STATIC can_${EMBEDDED_PLATFORM}.cpp)
 target_link_libraries(can PUBLIC can_interface)
 
-# Choose between stm32 or host implementation
-if(CMAKE_CROSSCOMPILING)
-    target_sources(can PRIVATE can_stm32.cpp)
-else()
-    target_sources(can PRIVATE can_host.cpp)
-
+if(EMBEDDED_PLATFORM STREQUAL "host")
     # Link third party host packages
     target_link_libraries(can PUBLIC
         cppzmq

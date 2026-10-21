@@ -16,7 +16,7 @@ function(target_link_board TARGET_NAME)
     # Link the board library
     target_link_libraries(${TARGET_NAME} PRIVATE board)
 
-    if(CMAKE_CROSSCOMPILING)
+    if(EMBEDDED_PLATFORM STREQUAL "stm32")
         # Inject the board's linker script safely
         if(DEFINED BOARD_LINKER_SCRIPT)
             target_link_options(${TARGET_NAME} PRIVATE -T${BOARD_LINKER_SCRIPT})
