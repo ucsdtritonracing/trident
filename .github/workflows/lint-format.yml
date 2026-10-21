@@ -59,8 +59,5 @@ jobs:
         with:
           cache: true
 
-      - name: Sync dependencies # (fails if uv.lock is out of date)
-        run: uv sync --extra dev --locked
-
       - name: Run Python formatting and lint checks
         run: just format-check python

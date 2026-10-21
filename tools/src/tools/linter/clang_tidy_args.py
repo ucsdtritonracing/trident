@@ -33,7 +33,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from tools import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH
+from tools.core import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH
 
 # Flags to drop when turning a real compile command into an "ask the
 # compiler for its default include dirs" probe command: we want the same
@@ -77,7 +77,8 @@ def _parse_include_dirs(cpp_verbose_output: str) -> list[str]:
     """Parse the `#include <...> search starts here` block that GCC/Clang
     print with `-Wp,-v` (or plain `-v`).
     """
-    dirs: set[str] = set()
+    dirs: list[str] = []
+    seen: set[str] = set()
     in_search_list = False
     for line in cpp_verbose_output.splitlines():
         if _SEARCH_START_RE.search(line):
@@ -88,9 +89,10 @@ def _parse_include_dirs(cpp_verbose_output: str) -> list[str]:
             continue
         if in_search_list:
             cleaned = _FRAMEWORK_SUFFIX_RE.sub("", line.strip())
-            if cleaned:
-                dirs.add(cleaned)
-    return sorted(dirs)
+            if cleaned and cleaned not in seen:
+                seen.add(cleaned)
+                dirs.append(cleaned)
+    return dirs
 
 
 def _run_compiler_probe(compile_commands_path: Path) -> str:
