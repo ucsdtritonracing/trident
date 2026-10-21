@@ -1,5 +1,5 @@
 # The interface that contains only abstract types
-# Headers are included by their full path from the embedded/ include root
+# Headers are included by their full path from the embedded directory
 add_library(can_interface INTERFACE)
 target_link_libraries(can_interface INTERFACE trident_includes)
 

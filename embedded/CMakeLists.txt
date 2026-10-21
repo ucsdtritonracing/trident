@@ -9,7 +9,7 @@ if(CMAKE_CROSSCOMPILING)
     set(BOARD "compute_module" CACHE STRING "Target board name")
 
     # Load the board HAL first so downstream targets can link to it
-    add_subdirectory(boards/${BOARD})
+    add_subdirectory(targets/${BOARD})
 endif()
 
 # Load the platform
