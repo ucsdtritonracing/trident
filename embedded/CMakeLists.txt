@@ -1,7 +1,7 @@
 # The single include root for all embedded code
 # Headers are included by their full path from here, e.g. #include "platform/can/can.h"
-add_library(trident_includes INTERFACE)
-target_include_directories(trident_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(embedded_includes INTERFACE)
+target_include_directories(embedded_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Load the platform first so the target can link to it
 add_subdirectory(platform)
