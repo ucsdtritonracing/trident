@@ -1,15 +1,11 @@
 # The interface that contains only abstract types
-# Make headers in this directory available to anything that links the interface
+# Headers are included by their full path from the embedded/ include root
 add_library(can_interface INTERFACE)
-target_include_directories(can_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(can_interface INTERFACE trident_includes)
 
 # The concrete implementation library of the interface
 add_library(can STATIC)
 target_link_libraries(can PUBLIC can_interface)
-
-# Expose this directory publicly
-# Allows consumers of the implementation library to include stm32 or host headers
-target_include_directories(can PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Choose between stm32 or host implementation
 if(CMAKE_CROSSCOMPILING)

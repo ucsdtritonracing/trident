@@ -1,3 +1,8 @@
+# The single include root for all embedded code
+# Headers are included by their full path from here, e.g. #include "platform/can/can.h"
+add_library(trident_includes INTERFACE)
+target_include_directories(trident_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
 # Choose the board if we are cross compiling to hardware (stm32)
 if(CMAKE_CROSSCOMPILING)
     # Default to compute_module if board not provided via CLI

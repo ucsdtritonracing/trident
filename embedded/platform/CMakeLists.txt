@@ -1,6 +1,5 @@
 # Platform interface library, just containing headers
 add_library(platform_interface INTERFACE)
-target_include_directories(platform_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Make subdirectories visible to CMake before linking
 add_subdirectory(can)
@@ -23,11 +22,6 @@ endif()
 target_link_libraries(platform PRIVATE
     # Required implementation libraries
     can
-)
-
-# Add as include directories to allow #include "FILE_NAME" without paths
-target_include_directories(platform_interface INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/can
 )
 
 # Link platform implementation to the platform interface library

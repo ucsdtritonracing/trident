@@ -1,7 +1,7 @@
 #include <cstdio>
 
-#include "platform.h"
-#include "can_host.h"
+#include "platform/platform.h"
+#include "platform/can/can_host.h"
 
 #include <zmq.hpp>
 
