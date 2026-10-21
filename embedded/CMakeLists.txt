@@ -3,22 +3,18 @@
 add_library(trident_includes INTERFACE)
 target_include_directories(trident_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Choose the board if we are cross compiling to hardware (stm32)
-if(CMAKE_CROSSCOMPILING)
-    # Default to compute_module if board not provided via CLI
-    set(BOARD "compute_module" CACHE STRING "Target board name")
-
-    # Load the board HAL first so downstream targets can link to it
-    add_subdirectory(targets/${BOARD})
-endif()
-
-# Load the platform
+# Load the platform first so the target can link to it
 add_subdirectory(platform)
 
-# Define a helper function to select either stm32 or host
-function(target_link_platform TARGET_NAME)
-    # Link the platform library
-    target_link_libraries(${TARGET_NAME} PRIVATE platform)
+# Choose the board. The host build simulates the same board.
+# Default to compute_module if board not provided via CLI
+set(BOARD "compute_module" CACHE STRING "Target board name")
+add_subdirectory(targets/${BOARD})
+
+# Define a helper function to link the board (stm32 vs host is chosen by the board library)
+function(target_link_board TARGET_NAME)
+    # Link the board library
+    target_link_libraries(${TARGET_NAME} PRIVATE board)
 
     if(CMAKE_CROSSCOMPILING)
         # Inject the board's linker script safely

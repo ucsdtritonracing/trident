@@ -1,8 +1,8 @@
 #include <cstdio>
-#include "platform/platform.h"
+#include "targets/compute_module/target.h"
 
 int main() {
-    Platform::Context platform = Platform::Init();
+    Target::Init();
     printf("Rear app running!\n");
     return 0;
 }
