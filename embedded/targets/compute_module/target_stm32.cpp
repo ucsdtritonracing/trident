@@ -1,29 +1,27 @@
 #include <cstdio>
 
-#include "platform.h"
-#include "can_stm32.h"
+#include "targets/compute_module/target.h"
+#include "platform/can/can_stm32.h"
 
-// Store global instances of the peripherals in a private namespace.
-// Limits peripheral access to just the context object.
+// Store the peripheral instances in a private namespace.
+// Limits peripheral access to Target::peripherals below.
 namespace {
 
-Platform::Can::Stm32Peripheral can1{};
-Platform::Can::Stm32Peripheral can2{};
+Platform::Can::Stm32Peripheral stm32_can1{};
+Platform::Can::Stm32Peripheral stm32_can2{};
 
 } // namespace
 
-namespace Platform {
+namespace Target {
 
-Context Init() {
-    printf("Running on STM32!\n");
+constinit Peripherals peripherals{
+    .can1 = stm32_can1,
+    .can2 = stm32_can2,
+};
 
-    return Context{
-        .can1 = can1,
-        .can2 = can2,
-    };
-}
+void Init() { printf("Running on STM32!\n"); }
 
-} // namespace Platform
+} // namespace Target
 
 // Implement syscalls required by C library but not provided by STM32 HAL. These are just stubs for
 // now, and should be implemented properly if needed.

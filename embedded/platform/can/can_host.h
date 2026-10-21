@@ -1,6 +1,6 @@
 #pragma once
 
-#include "can.h"
+#include "platform/can/can.h"
 
 #include <zmq.hpp>
 
