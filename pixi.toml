@@ -19,6 +19,7 @@ uv = "*"
 ruff = ">=0.1.60"
 # Developer dependencies
 just = "*"
+pre-commit = "*"
 
 [target.win-64.dependencies]
 gcc = "*"
@@ -33,4 +34,3 @@ gxx = "*"
 odyssey = { path = "odyssey", editable = true }
 tools = { path = "tools", editable = true }
 tests = { path = "tests", editable = true }
-pre-commit = "*"
