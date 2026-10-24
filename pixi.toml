@@ -33,3 +33,4 @@ gxx = "*"
 odyssey = { path = "odyssey", editable = true }
 tools = { path = "tools", editable = true }
 tests = { path = "tests", editable = true }
+pre-commit = "*"
