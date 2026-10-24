@@ -51,3 +51,12 @@ format target = "all":
 
 test: (build "host")
     pytest tests/integration -v
+
+
+install-hooks:
+    pixi run pre-commit install
+
+# rn same as format-check but good if we add other hooks
+check-hooks:
+    pixi run pre-commit run --all-files
+    
