@@ -12,7 +12,7 @@ for item in proto_dir.iterdir():
             "protoc",
             f"--proto_path={proto_dir}",
             f"--cpp_out={generated_dir/"cpp"}",
-            f"--python_out={generated_dir/"python"}",
+            f"--python_out={generated_dir/"python/src/python-protocol"}",
             str(item),
         ],
         check=True,

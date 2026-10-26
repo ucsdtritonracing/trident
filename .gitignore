@@ -80,4 +80,6 @@ __pycache__/
 .ruff_cache
 
 # Generated
-shared/generated
+shared/generated/cpp/*
+shared/generated/python/src/python-protocol/*
+!shared/generated/python/src/python-protocol/__init__.py

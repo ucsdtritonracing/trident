@@ -1,0 +1,15 @@
+[project]
+name = "python-protocol"
+version = "0.1.0"
+description = "Generated Protobuf classes for sending serialized messages over ZMQ"
+requires-python = ">=3.11"
+dependencies = [
+    # add as needed, e.g.:
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/python-protocol"]
