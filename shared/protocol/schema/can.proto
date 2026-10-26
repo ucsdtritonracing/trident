@@ -8,8 +8,8 @@ message CanMessage {
     bool is_remote = 3;
     int32 length = 4;
     bytes data = 5;
-    uint32 bus = 6;               // which bus
+    uint32 bus = 6;              // which bus
     bool is_fd = 7;              // CAN FD support in future?
     bool bit_rate_switch = 8;    // CAN FD: BRS bit
-    bool error_state = 9;       // CAN FD: ESI bit
+    bool error_state = 9;        // CAN FD: ESI bit
 }
