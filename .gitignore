@@ -81,5 +81,5 @@ __pycache__/
 
 # Generated
 shared/generated/cpp/*
-shared/generated/python/src/python-protocol/*
-!shared/generated/python/src/python-protocol/__init__.py
+shared/generated/python/src/python_protocol/*
+!shared/generated/python/src/python_protocol/__init__.py
