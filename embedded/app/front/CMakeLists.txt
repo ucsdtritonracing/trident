@@ -1,6 +1,6 @@
 # Core logic
 add_library(front_core STATIC main_front.cpp)
-target_link_libraries(front_core PUBLIC embedded_target)
+target_link_libraries(front_core PUBLIC core embedded_target)
 
 # Executable entry point
 add_executable(front main_front.cpp)
