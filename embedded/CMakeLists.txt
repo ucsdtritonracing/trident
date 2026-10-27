@@ -3,6 +3,9 @@
 add_library(embedded_includes INTERFACE)
 target_include_directories(embedded_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Hardware-free libraries, used by every layer below
+add_subdirectory(core)
+
 # Load the platform first so the target can link to it
 add_subdirectory(platform)
 
