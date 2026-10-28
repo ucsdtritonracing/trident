@@ -4,17 +4,35 @@
 #include "can_host.h"
 
 #include <zmq.hpp>
+#include <string>
 
-// Store global instances of the peripherals in a private namespace.
-// Limits peripheral access to just the context object.
+//namespace
 namespace {
 
+constexpr int CAN1_SEND_PORT = 8053;
+constexpr int CAN1_RECEIVE_PORT = 8057;
+constexpr int CAN2_SEND_PORT = 8054;
+constexpr int CAN2_RECEIVE_PORT = 8058;
+
+std::string MakeAddress(int port) {
+    return "tcp://localhost:" + std::to_string(port);
+}
 zmq::context_t zmq_ctx{1};
-Platform::Can::HostPeripheral can1{zmq_ctx, "tcp://127.0.0.1:8053", "tcp://127.0.0.1:8057"};
 
-Platform::Can::HostPeripheral can2{zmq_ctx, "", ""};
+const std::string can1_send = MakeAddress(CAN1_SEND_PORT);
+const std::string can1_receive = MakeAddress(CAN1_RECEIVE_PORT);
+const std::string can2_send = MakeAddress(CAN2_SEND_PORT);
+const std::string can2_receive = MakeAddress(CAN2_RECEIVE_PORT);
 
-} // namespace
+Platform::Can::HostPeripheral can1{
+    zmq_ctx, can1_send, can1_receive
+};
+
+Platform::Can::HostPeripheral can2{
+    zmq_ctx, can2_send, can2_receive
+};
+}
+//namespace
 
 namespace Platform {
 
@@ -27,4 +45,4 @@ Context Init() {
     };
 }
 
-} // namespace Platform
+} //namespace
