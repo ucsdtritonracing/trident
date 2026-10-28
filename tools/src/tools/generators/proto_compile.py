@@ -1,6 +1,7 @@
 import subprocess
-from pathlib import Path
+
 from tools.core import REPO_ROOT
+
 proto_dir = REPO_ROOT / "shared/protocol/schema"
 generated_dir = REPO_ROOT / "shared/generated"
 
