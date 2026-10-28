@@ -7,22 +7,21 @@
 
 namespace Platform::Can {
 
-
 SendStatus HostPeripheral::Send(const Message& message) {
     if (message.length > MAX_CAN_DATA_LENGTH) {
         return SendStatus::ERROR;
     }
     zmq::send_result_t result;
     try {
-        result = pub_socket.send(zmq::buffer(message.data, message.length),
-                                 zmq::send_flags::dontwait);
+        result =
+            pub_socket.send(zmq::buffer(message.data, message.length), zmq::send_flags::dontwait);
     } catch (const zmq::error_t&) {
         return SendStatus::ERROR;
     }
 
     if (result) {
         return SendStatus::QUEUED;
-    } 
+    }
     return SendStatus::QUEUE_FULL;
 }
 
@@ -43,7 +42,7 @@ PollStatus HostPeripheral::Poll(Message& out) {
     if (received.size() > MAX_CAN_DATA_LENGTH) {
         return PollStatus::ERROR;
     }
-    
+
     out.id = 0;
     out.length = static_cast<uint8_t>(received.size());
     for (size_t i = 0; i < received.size(); i++) {
@@ -52,8 +51,6 @@ PollStatus HostPeripheral::Poll(Message& out) {
     return PollStatus::NEW_MESSAGE;
 }
 
-BusState HostPeripheral::GetStatus(){ 
-    return BusState::BUS_OFF; 
-}
+BusState HostPeripheral::GetStatus() { return BusState::BUS_OFF; }
 
-} 
+} // namespace Platform::Can

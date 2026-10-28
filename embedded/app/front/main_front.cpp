@@ -1,5 +1,5 @@
-#include <cstdio>
 #include "platform.h"
+#include <cstdio>
 
 int main() {
     Platform::Context platform = Platform::Init();
