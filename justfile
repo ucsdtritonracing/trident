@@ -53,4 +53,4 @@ test: (build "host")
     pytest tests/integration -v
 
 build-proto: 
-    python -m tools.generators.proto-compile
+    python -m tools.generators.proto_compile
