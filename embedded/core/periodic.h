@@ -20,7 +20,6 @@ namespace Core {
  * }
  * @endcode
  */
-
 class Periodic {
 public:
     /**
