@@ -1,26 +1,27 @@
-# Choose the board if we are cross compiling to hardware (stm32)
-if(CMAKE_CROSSCOMPILING)
-    # Default to compute_module if board not provided via CLI
-    set(BOARD "compute_module" CACHE STRING "Target board name")
+# The single include root for all embedded code
+# Headers are included by their full path from here, e.g. #include "platform/can/can.h"
+add_library(embedded_includes INTERFACE)
+target_include_directories(embedded_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
-    # Load the board HAL first so downstream targets can link to it
-    add_subdirectory(boards/${BOARD})
-endif()
-
-# Load the platform
+# Load the platform first so the target can link to it
 add_subdirectory(platform)
 
-# Define a helper function to select either stm32 or host
-function(target_link_platform TARGET_NAME)
-    # Link the platform library
-    target_link_libraries(${TARGET_NAME} PRIVATE platform)
+# Choose the target (hardware configuration). The host build simulates the same target.
+# Default to compute_module if target not provided via CLI
+set(EMBEDDED_TARGET "compute_module" CACHE STRING "Target hardware configuration")
+add_subdirectory(targets/${EMBEDDED_TARGET})
 
-    if(CMAKE_CROSSCOMPILING)
-        # Inject the board's linker script safely
-        if(DEFINED BOARD_LINKER_SCRIPT)
-            target_link_options(${TARGET_NAME} PRIVATE -T${BOARD_LINKER_SCRIPT})
+# Define a helper function to link the selected target to an app
+function(link_embedded_target APP_NAME)
+    # Link the target library
+    target_link_libraries(${APP_NAME} PRIVATE embedded_target)
+
+    if(EMBEDDED_PLATFORM STREQUAL "stm32")
+        # Inject the target's linker script safely
+        if(DEFINED EMBEDDED_TARGET_LINKER_SCRIPT)
+            target_link_options(${APP_NAME} PRIVATE -T${EMBEDDED_TARGET_LINKER_SCRIPT})
         else()
-            message(FATAL_ERROR "BOARD_LINKER_SCRIPT is not defined for ${TARGET_NAME}")
+            message(FATAL_ERROR "EMBEDDED_TARGET_LINKER_SCRIPT is not defined for ${APP_NAME}")
         endif()
     endif()
 endfunction()

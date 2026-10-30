@@ -1,6 +1,6 @@
-#include "can_host.h"
+#include "platform/can/can_host.h"
 
-#include "can.h"
+#include "platform/can/can.h"
 
 #include <zmq.hpp>
 

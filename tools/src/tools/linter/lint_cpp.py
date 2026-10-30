@@ -28,7 +28,7 @@ CPP_EXCLUDE_DIRS = {
     "node_modules",
     "dist",
     "site-packages",
-    "embedded/boards/compute_module/cubemx",
+    "cubemx",
     ".pixi",
 }
 
