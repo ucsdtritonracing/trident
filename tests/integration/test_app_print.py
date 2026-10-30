@@ -8,7 +8,7 @@ build_app_dir = repo_root / "build" / "host" / "embedded" / "app"
 
 
 expected_output = {
-    "front": ["Running on host!\nFront app running!"],
+    "front": ["Running on host!\nFront app BROKEN :( "],
     "rear": ["Running on host!\nRear app running!"],
 }
 
