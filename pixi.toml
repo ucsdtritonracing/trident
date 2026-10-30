@@ -13,10 +13,14 @@ zeromq = "*"
 cppzmq = "*"
 pkg-config = "*"
 clang-tools = "*"
+libprotobuf = "==7.35.1"
+
 # Python dependencies
 python = ">=3.11"
 uv = "*"
 ruff = ">=0.1.60"
+protobuf = "==7.35.1"
+
 # Developer dependencies
 just = "*"
 
@@ -33,3 +37,6 @@ gxx = "*"
 odyssey = { path = "odyssey", editable = true }
 tools = { path = "tools", editable = true }
 tests = { path = "tests", editable = true }
+python_protocol = { path = "shared/generated/python", editable = true }
+
+

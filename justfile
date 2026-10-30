@@ -12,7 +12,7 @@ wipe:
     rm -rf */.pytest_cache
 
 
-configure target="all":
+configure target="all": (build-proto)
     python -m tools.linter.cmake_target configure {{target}}
 
 
@@ -51,3 +51,6 @@ format target = "all":
 
 test: (build "host")
     pytest tests/integration -v
+
+build-proto: 
+    python -m tools.generators.proto_compile
