@@ -1,6 +1,3 @@
-# print working directory variable
-pwd := `pwd`
-
 install:
     ./tools/scripts/install.sh
     pixi run pre-commit install
@@ -20,14 +17,14 @@ configure target="all":
 
 compile-commands-host:
     python -m tools.generators.merge_compile_commands \
-    -b {{pwd}}/build/host \
-    -b {{pwd}}/build/stm32
+    -b '{{justfile_directory()}}/build/host' \
+    -b '{{justfile_directory()}}/build/stm32'
 
 
 compile-commands-stm32:
     python -m tools.generators.merge_compile_commands \
-    -b {{pwd}}/build/stm32 \
-    -b {{pwd}}/build/host
+    -b '{{justfile_directory()}}/build/stm32' \
+    -b '{{justfile_directory()}}/build/host'
 
 
 build target="all": (configure target)
