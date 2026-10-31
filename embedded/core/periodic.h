@@ -22,14 +22,22 @@ namespace Core {
  */
 class Periodic {
 public:
+    /// Period and offset for a Periodic. Usage: `Periodic{{.period = 10ms, .offset = 2ms}}`
+    struct Config {
+        /// Time between runs. Fixed for the lifetime of the Periodic.
+        Duration period;
+        /// Delay of the first due time after the first call. Used to spread components with the
+        /// same period across different ticks.
+        Duration offset = Duration::zero();
+    };
     /**
      * @param period Time between runs. Fixed for the lifetime of the Periodic.
-     * @param offset Delay of the first due time after the first call. Used to spread components
-     *               with the same period across different ticks.
      */
-    constexpr explicit Periodic(Duration period, Duration offset = Duration::zero())
-        : period(period), offset(offset) {}
-
+    constexpr explicit Periodic(Duration period) : period(period) {}
+    /**
+     * @param config Period and offset. See Config.
+     */
+    constexpr explicit Periodic(Config config) : period(config.period), offset(config.offset) {}
     /**
      * Check whether the caller is due to run.
      *
@@ -71,7 +79,7 @@ public:
 
 private:
     Duration period;
-    Duration offset;
+    Duration offset = Duration::zero();
     Timestamp next_due;
     uint32_t missed_count = 0;
     bool started = false;
