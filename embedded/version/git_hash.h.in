@@ -1,0 +1,10 @@
+#pragma once
+
+// Generated from embedded/version/git_hash.h.in by cmake/git_hash.cmake. Do not edit.
+
+namespace Version {
+
+/// First 8 hex digits of the commit this was built from, or "c0ffee00" if Git was unavailable.
+constexpr const char* GIT_HASH = "@GIT_HASH@";
+
+} // namespace Version
