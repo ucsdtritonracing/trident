@@ -3,7 +3,6 @@
 #include "can.h"
 
 #include <zmq.hpp>
-#define MAX_CAN_DATA_LENGTH 8
 
 namespace Platform::Can {
 

@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstdint>
+constexpr int MAX_CAN_DATA_LENGTH = 8;
 
-namespace Platform::Can {
+namespace Platform {
+namespace Can {
 
 enum class BusState : uint8_t {
     OK,
@@ -26,7 +28,7 @@ enum class PollStatus : uint8_t {
 struct Message {
     uint32_t id;
     uint8_t length;
-    uint8_t data[8];
+    uint8_t data[MAX_CAN_DATA_LENGTH];
 };
 
 class Peripheral {
@@ -57,4 +59,5 @@ public:
     virtual BusState GetStatus() = 0;
 };
 
-} // namespace Platform::Can
+} // namespace Can
+} // namespace Platform
