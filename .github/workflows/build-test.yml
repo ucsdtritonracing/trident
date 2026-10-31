@@ -1,0 +1,42 @@
+name: build-test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: build host and STM32, test host
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: pixi run bash -e {0}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pixi environment
+        uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          cache: true
+
+      # Host compiler is already in the Pixi setup
+      - name: Install STM32 C++ compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi
+
+      - name: Build host and STM32
+        run: just build
+
+      - name: Test host
+        run: just test
