@@ -1,22 +1,13 @@
 # The interface that contains only abstract types
-# Make headers in this directory available to anything that links the interface
+# Headers are included by their full path from the embedded directory
 add_library(can_interface INTERFACE)
-target_include_directories(can_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(can_interface INTERFACE embedded_includes)
 
-# The concrete implementation library of the interface
-add_library(can STATIC)
+# The concrete implementation library of the interface, chosen by platform
+add_library(can STATIC can_${EMBEDDED_PLATFORM}.cpp)
 target_link_libraries(can PUBLIC can_interface)
 
-# Expose this directory publicly
-# Allows consumers of the implementation library to include stm32 or host headers
-target_include_directories(can PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Choose between stm32 or host implementation
-if(CMAKE_CROSSCOMPILING)
-    target_sources(can PRIVATE can_stm32.cpp)
-else()
-    target_sources(can PRIVATE can_host.cpp)
-
+if(EMBEDDED_PLATFORM STREQUAL "host")
     # Link third party host packages
     target_link_libraries(can PUBLIC
         cppzmq

@@ -38,9 +38,12 @@ from tools.core import COMPILE_COMMANDS_HOST_PATH, COMPILE_COMMANDS_STM32_PATH
 # Flags to drop when turning a real compile command into an "ask the
 # compiler for its default include dirs" probe command: we want the same
 # target/std/define flags, but not the ones that control compiling an
-# actual object file.
+# actual object file. Project -I dirs are dropped too: otherwise they show
+# up in the probe's search list and get passed back as -isystem, which
+# hides clang-tidy warnings in our own headers.
 _DROP_FLAG = {"-c"}
-_DROP_FLAG_WITH_VALUE = {"-o", "-MF", "-MT", "-MQ"}
+_DROP_FLAG_WITH_VALUE = {"-o", "-MF", "-MT", "-MQ", "-I"}
+_DROP_FLAG_PREFIXES = ("-I",)  # joined form, e.g. -Ipath
 _DROP_VALUELESS_DEP_FLAGS = {"-MD", "-MMD"}
 
 _SEARCH_START_RE = re.compile(r"search starts here:?\s*$")
@@ -66,6 +69,8 @@ def _probe_args_from_compile_entry(entry: dict) -> list[str]:
             skip_next = True
             continue
         if tok in _DROP_FLAG or tok in _DROP_VALUELESS_DEP_FLAGS:
+            continue
+        if tok.startswith(_DROP_FLAG_PREFIXES):
             continue
         if tok == source_file:
             continue
