@@ -44,8 +44,8 @@ public:
      * @param now The current time.
      * @return True if the caller should run this tick.
      *
-     * @note The [[nodiscard]] is to prevent accidentally ignoring the return value, because the
-     * next_due is updated on every call.
+     * @note The [[nodiscard]] is to prevent the caller from ignoring the return value, because
+     * next_due is updated on every call. This guarantees the periodic doesn't blindly advance.
      */
     [[nodiscard]] bool Due(Timestamp now) {
         // Always run if the period is zero/negative.
