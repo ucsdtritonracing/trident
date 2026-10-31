@@ -3,6 +3,8 @@ pwd := `pwd`
 
 install:
     ./tools/scripts/install.sh
+    pixi run pre-commit install
+
 
 
 wipe:
@@ -51,3 +53,9 @@ format target = "all":
 
 test: (build "host")
     pytest tests/integration -v
+
+
+# rn same as format-check but good if we add other hooks
+check-hooks:
+    pixi run pre-commit run --all-files
+    
