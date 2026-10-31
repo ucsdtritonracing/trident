@@ -1,8 +1,7 @@
-# print working directory variable
-pwd := `pwd`
-
 install:
     ./tools/scripts/install.sh
+    pixi run pre-commit install
+
 
 
 wipe:
@@ -18,14 +17,14 @@ configure target="all":
 
 compile-commands-host:
     python -m tools.generators.merge_compile_commands \
-    -b {{pwd}}/build/host \
-    -b {{pwd}}/build/stm32
+    -b '{{justfile_directory()}}/build/host' \
+    -b '{{justfile_directory()}}/build/stm32'
 
 
 compile-commands-stm32:
     python -m tools.generators.merge_compile_commands \
-    -b {{pwd}}/build/stm32 \
-    -b {{pwd}}/build/host
+    -b '{{justfile_directory()}}/build/stm32' \
+    -b '{{justfile_directory()}}/build/host'
 
 
 build target="all": (configure target)
@@ -51,3 +50,9 @@ format target = "all":
 
 test: (build "host")
     pytest tests/integration -v
+
+
+# rn same as format-check but good if we add other hooks
+check-hooks:
+    pixi run pre-commit run --all-files
+    

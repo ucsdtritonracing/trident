@@ -3,6 +3,9 @@
 add_library(embedded_includes INTERFACE)
 target_include_directories(embedded_includes INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Core library
+add_subdirectory(core)
+
 # Git hash of the source tree
 add_subdirectory(version)
 
