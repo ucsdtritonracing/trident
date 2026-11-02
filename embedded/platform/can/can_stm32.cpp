@@ -1,6 +1,6 @@
-#include "can_stm32.h"
+#include "platform/can/can_stm32.h"
 
-#include "can.h"
+#include "platform/can/can.h"
 
 namespace Platform::Can {
 

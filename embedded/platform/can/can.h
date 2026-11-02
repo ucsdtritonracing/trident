@@ -3,8 +3,7 @@
 #include <cstdint>
 constexpr int MAX_CAN_DATA_LENGTH = 8;
 
-namespace Platform {
-namespace Can {
+namespace Platform::Can {
 
 enum class BusState : uint8_t {
     OK,
@@ -59,5 +58,4 @@ public:
     virtual BusState GetStatus() = 0;
 };
 
-} // namespace Can
-} // namespace Platform
+} // namespace Platform::Can

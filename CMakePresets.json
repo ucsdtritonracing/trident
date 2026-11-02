@@ -13,7 +13,8 @@
             "binaryDir": "${sourceDir}/build/stm32",
             "toolchainFile": "${sourceDir}/cmake/arm-none-eabi-gcc.cmake",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "EMBEDDED_PLATFORM": "stm32"
             }
         },
         {
@@ -22,7 +23,8 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/host",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "EMBEDDED_PLATFORM": "host"
             }
         }
     ],

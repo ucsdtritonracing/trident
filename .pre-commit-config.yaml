@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: trident-format-check
+        name: Trident format and lint check
+        entry: bash tools/scripts/pre-commit-check.sh
+        language: system
+        pass_filenames: false
+        always_run: true
