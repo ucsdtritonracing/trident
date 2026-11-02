@@ -11,7 +11,7 @@ wipe:
     rm -rf */.pytest_cache
 
 
-configure target="all": (build-proto)
+configure target="all": 
     python -m tools.linter.cmake_target configure {{target}}
 
 
