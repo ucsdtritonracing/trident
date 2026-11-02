@@ -19,6 +19,11 @@ namespace Core {
  *      ...
  * }
  * @endcode
+ *
+ * @note To spread components with the same period across different ticks, use an offset:
+ * @code
+ * static Core::Periodic rate{{.period = 10ms, .offset = 2ms}};
+ * @endcode
  */
 class Periodic {
 public:
