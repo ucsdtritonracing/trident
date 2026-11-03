@@ -40,7 +40,7 @@ gtest = { path = "packages/gtest" }
 
 [target.unix.dependencies]
 # Prebuilt from conda-forge for Mac and Linux
-gtest = "*"
+gtest = "==1.18.0"
 
 [target.linux-64.dependencies]
 gcc = "*"

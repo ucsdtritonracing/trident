@@ -11,9 +11,13 @@
 name = "gtest"
 version = "1.18.0"
 
-[package.build]
-backend = { name = "pixi-build-cmake", version = "*" }
-source = { git = "https://github.com/google/googletest.git", branch = "main" }
+[package.build.backend]
+name = "pixi-build-cmake"
+version = "*"
+
+[package.build.source]
+git = "https://github.com/google/googletest.git"
+tag = "v1.18.0"
 
 [package.build.config]
 compilers = ["c", "cxx"]
