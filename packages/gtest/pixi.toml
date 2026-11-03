@@ -1,0 +1,23 @@
+# Source build of GoogleTest, used only on Windows.
+#
+# The win-64 gtest package on conda-forge is built with MSVC, which is incompatible
+# with the MinGW-w64 GCC toolchain we use for host builds. So on Windows we build
+# GoogleTest from source with the same GCC compiler. MacOS and Linux use the
+# prebuilt conda-forge package (see the root pixi.toml).
+#
+# Keep the version in sync with the prebuilt gtest in the root pixi.toml.
+
+[package]
+name = "gtest"
+version = "1.18.0"
+
+[package.build]
+backend = { name = "pixi-build-cmake", version = "*" }
+source = { git = "https://github.com/google/googletest.git", branch = "main" }
+
+[package.build.config]
+compilers = ["c", "cxx"]
+# extra-args = [
+#     # Suppress dll's
+#     "-DBUILD_SHARED_LIBS=OFF",
+# ]
