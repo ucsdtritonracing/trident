@@ -9,7 +9,7 @@ set(CPP_PROTO_OUT_DIR
     ${CMAKE_BINARY_DIR}/shared/generated/cpp
 )
 set(PYTHON_PROTO_OUT_DIR
-    ${CMAKE_SOURCE_DIR}/shared/generated/python/src/python_protocol
+    ${CMAKE_SOURCE_DIR}/odyssey/src/odyssey/protocol
 )
 
 protobuf_generate(
