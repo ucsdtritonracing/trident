@@ -38,5 +38,8 @@ jobs:
       - name: Build host and STM32
         run: just build
 
-      - name: Test host
-        run: just test
+      - name: Run unit tests
+        run: just unit-test
+      
+      - name: Run integration tests
+        run: just integration-test
