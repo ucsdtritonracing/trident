@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package proto_can;
+
+message CanMessage {
+    uint32 id = 1;
+    bool is_extended = 2;
+    bool is_remote = 3;
+    int32 dlc = 4;
+    bytes data = 5;
+    uint32 bus = 6;              // which bus
+    bool is_fd = 7;              // CAN FD support in future?
+    bool bit_rate_switch = 8;    // CAN FD: BRS bit
+    bool error_state = 9;        // CAN FD: ESI bit
+}

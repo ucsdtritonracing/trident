@@ -19,6 +19,7 @@ endif()
 # Find third party host packages
 if(EMBEDDED_PLATFORM STREQUAL "host")
     find_package(cppzmq REQUIRED)
+    add_subdirectory(shared/protocol)
 endif()
 
 # Force CMake to emit ALL include paths into compile_commands.json
