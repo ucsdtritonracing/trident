@@ -17,7 +17,3 @@ source = { git = "https://github.com/google/googletest.git", branch = "main" }
 
 [package.build.config]
 compilers = ["c", "cxx"]
-# extra-args = [
-#     # Suppress dll's
-#     "-DBUILD_SHARED_LIBS=OFF",
-# ]
