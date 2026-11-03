@@ -4,7 +4,7 @@ from tools.core import REPO_ROOT
 
 proto_dir = REPO_ROOT / "shared/protocol/schema"
 cpp_dir = REPO_ROOT / "build/host/shared/generated/cpp"
-python_dir = REPO_ROOT / "shared/generated/python/src/python_protocol"
+python_dir = REPO_ROOT / "odyssey/src/odyssey/protocol"
 for item in proto_dir.iterdir():
     if item.suffix == ".proto" and item.is_file():
         subprocess.run(

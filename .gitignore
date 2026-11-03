@@ -83,3 +83,5 @@ __pycache__/
 shared/generated/cpp/*
 shared/generated/python/src/python_protocol/*
 !shared/generated/python/src/python_protocol/__init__.py
+odyssey/src/odyssey/protocol/*
+!odyssey/src/odyssey/protocol/__init__.py

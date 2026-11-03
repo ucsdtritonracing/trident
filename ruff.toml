@@ -9,6 +9,7 @@ extend-exclude = [
     "node_modules",
     "dist",
     "site-packages",
+    "odyssey/src/odyssey/protocol"
 ]
 
 [lint]
