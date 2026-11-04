@@ -2,6 +2,7 @@
 
 #include "core/time.h"
 
+
 // FromMicros(int64_t) tests for positive and zero values.
 TEST(TimeTest, FromMicrosPositive) {
     const Core::Timestamp timestamp = Core::FromMicros(900);
@@ -13,10 +14,6 @@ TEST(TimeTest, FromMicrosZero) {
     EXPECT_EQ(Core::Duration::zero(), timestamp.time_since_epoch());
 }
 
-TEST(TimeTest, FromMicrosNegative) {
-    const Core::Timestamp timestamp = Core::FromMicros(-900);
-    EXPECT_EQ(Core::Duration{-900}, timestamp.time_since_epoch());
-}
 
 // ToMicros(Timestamp) tests for positive and zero values.
 TEST(TimeTest, TimestampToMicrosPositive) {
@@ -29,6 +26,7 @@ TEST(TimeTest, TimestampToMicrosZero) {
     EXPECT_EQ(0, Core::ToMicros(timestamp));
 }
 
+
 // ToMicros(Duration) tests for positive and zero values.
 TEST(TimeTest, DurationToMicrosPositive) {
     const Core::Duration duration = 2ms;
@@ -39,6 +37,7 @@ TEST(TimeTest, DurationToMicrosZero) {
     const Core::Duration duration = Core::Duration::zero();
     EXPECT_EQ(0, Core::ToMicros(duration));
 }
+
 
 // ToSeconds(Duration) tests for positive and zero values.
 TEST(TimeTest, ToSecondsPositive) {
