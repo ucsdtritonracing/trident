@@ -1,6 +1,8 @@
 [workspace]
 name = "trident"
 version = "0.1.0"
+# Pinned pixi version. Keep in sync with tools/scripts/install.sh and .github/workflows/*.yml
+requires-pixi = "==0.84.0"
 channels = ["conda-forge", "memfault"]
 # Enable building a package from source. Currently a preview feature in pixi.
 preview = ["pixi-build"]

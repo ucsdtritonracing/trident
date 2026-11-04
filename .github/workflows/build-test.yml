@@ -27,6 +27,7 @@ jobs:
       - name: Setup Pixi environment
         uses: prefix-dev/setup-pixi@v0.10.2
         with:
+          pixi-version: v0.84.0
           cache: true
 
       # Host compiler is already in the Pixi setup
