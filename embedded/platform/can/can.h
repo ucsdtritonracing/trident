@@ -31,7 +31,7 @@ struct Message {
 
 class Peripheral {
 public:
-    ~Peripheral() = default;
+    virtual ~Peripheral() = default;
 
     /**
      * Send a CAN message over the peripheral.
