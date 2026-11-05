@@ -11,8 +11,9 @@ Checks: >
   -readability-magic-numbers,
   -readability-identifier-length,
   -readability-function-cognitive-complexity,
+  cppcoreguidelines-virtual-class-destructor,
 
-WarningsAsErrors: ''
+WarningsAsErrors: 'cppcoreguidelines-virtual-class-destructor'
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
