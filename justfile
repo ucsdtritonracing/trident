@@ -3,7 +3,6 @@ install:
     pixi run pre-commit install
 
 
-
 wipe:
     rm -rf build
     rm -rf .cache
@@ -48,12 +47,18 @@ format target = "all":
     python -m tools.linter.lint fix {{target}}
 
 
-test: (build "host")
+unit-test: (build "host")
+    ctest --preset host
+
+
+integration-test:
     pytest tests/integration -v
 
 build-proto: 
     python -m tools.generators.proto_compile
 
+
+test: (build "host") unit-test integration-test
 
 # rn same as format-check but good if we add other hooks
 check-hooks:
