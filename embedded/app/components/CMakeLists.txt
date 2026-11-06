@@ -1,0 +1,2 @@
+add_library(app_components INTERFACE)
+target_link_libraries(app_components INTERFACE core)
