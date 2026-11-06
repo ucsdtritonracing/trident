@@ -63,4 +63,3 @@ test: (build "host") unit-test integration-test
 # rn same as format-check but good if we add other hooks
 check-hooks:
     pixi run pre-commit run --all-files
-    

@@ -28,6 +28,7 @@ jobs:
       - name: Setup Pixi environment
         uses: prefix-dev/setup-pixi@v0.10.2
         with:
+          pixi-version: v0.84.0
           cache: true
 
       - name: Install STM32 C++ compiler
@@ -54,6 +55,7 @@ jobs:
       - name: Setup Pixi environment
         uses: prefix-dev/setup-pixi@v0.10.2
         with:
+          pixi-version: v0.84.0
           cache: true
 
       - name: Run Python formatting and lint checks

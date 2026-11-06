@@ -32,10 +32,12 @@ fail() {
     echo -e "${RED}✗${RESET} $1"
 }
 
-install_pixi() {
-    echo "Installing Pixi..."
+# Pinned pixi version. Keep in sync with requires-pixi in pixi.toml and .github/workflows/*.yml
+PIXI_VERSION="0.84.0"
 
-    if ! curl -fsSL https://pixi.sh/install.sh | bash; then
+install_pixi() {
+    echo "Installing Pixi ${PIXI_VERSION}..."
+    if ! curl -fsSL https://pixi.sh/install.sh | PIXI_VERSION="${PIXI_VERSION}" bash; then
         printf "\n"
         printf "${YELLOW}Pixi installation failed.${RESET}\n\n"
         printf "The installer could not resolve ${CYAN}pixi.sh${RESET}.\n"
@@ -70,7 +72,14 @@ printf "%b\n"                                                               \
 step "Checking Pixi installation"
 
 if command -v pixi >/dev/null 2>&1; then
-    success "Pixi already installed ($(pixi --version))"
+    current_version="$(pixi --version | awk '{print $2}')"
+    if [[ "$current_version" == "$PIXI_VERSION" ]]; then
+        success "Pixi already installed ($current_version)"
+    else
+        warn "Pixi $current_version installed, switching to pinned version $PIXI_VERSION"
+        pixi self-update --version "$PIXI_VERSION"
+        success "Pixi $PIXI_VERSION installed"
+    fi
 else
     rm -rf "$HOME/.pixi"
     install_pixi
