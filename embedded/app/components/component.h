@@ -27,8 +27,9 @@ public:
     virtual void Step(Core::Timestamp now) = 0;
 
 protected:
-    // Deleting the copy constructor removes the implicit default one, so we need to explicitly define a default constructor for derived classes.
-    // constexpr so derived components can be constinit.
+    // Deleting the copy constructor removes the implicit default one, so we need to explicitly
+    // define a default constructor for derived classes. constexpr so derived components can be
+    // constinit.
     constexpr Component() = default;
 };
 
