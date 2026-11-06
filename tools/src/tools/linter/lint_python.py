@@ -12,6 +12,7 @@ PY_EXCLUDE_DIRS = {
     "dist",
     "site-packages",
     ".pixi",
+    "odyssey/src/odyssey/protocol",
 }
 
 
