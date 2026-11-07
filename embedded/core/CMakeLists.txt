@@ -3,5 +3,5 @@ add_library(core INTERFACE)
 target_link_libraries(core INTERFACE embedded_includes)
 
 add_unit_test(core_tests
-    SOURCES periodic_test.cpp
+    SOURCES periodic_test.cpp time_test.cpp
     LIBS core)
