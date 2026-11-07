@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+constexpr int MAX_CAN_DATA_LENGTH = 8;
 
 namespace Platform::Can {
 
@@ -26,7 +27,7 @@ enum class PollStatus : uint8_t {
 struct Message {
     uint32_t id;
     uint8_t length;
-    uint8_t data[8];
+    uint8_t data[MAX_CAN_DATA_LENGTH];
 };
 
 class Peripheral {

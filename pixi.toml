@@ -1,8 +1,17 @@
 [workspace]
 name = "trident"
 version = "0.1.0"
+# Pinned pixi version. Keep in sync with tools/scripts/install.sh and .github/workflows/*.yml
+requires-pixi = "==0.84.0"
 channels = ["conda-forge", "memfault"]
+# Enable building a package from source. Currently a preview feature in pixi.
+preview = ["pixi-build"]
 platforms = ["win-64", "osx-64", "osx-arm64", "linux-64"]
+
+# Build GoogleTest with GCC (MinGW-w64 on Windows)
+[workspace.build-variants]
+c_compiler = ["gcc"]
+cxx_compiler = ["gxx"]
 
 [dependencies]
 # C++ dependencies
@@ -28,6 +37,12 @@ pre-commit = "*"
 [target.win-64.dependencies]
 gcc = "*"
 gxx = "*"
+# Built from source with MinGW GCC, see packages/gtest/pixi.toml
+gtest = { path = "packages/gtest" }
+
+[target.unix.dependencies]
+# Prebuilt from conda-forge for Mac and Linux
+gtest = "==1.18.0"
 
 [target.linux-64.dependencies]
 gcc = "*"
