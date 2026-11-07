@@ -4,7 +4,7 @@
 #include "core/time.h"
 
 // The tests are split into tests using Periodic(Duration) and tests using Periodic(Config) so
-// basically I'm repeating tests for with offset vs without.
+// basically I'm repeating tests for with offset vs without for all cases.
 
 // Periodic(Duration) test for a zero period.
 TEST(PeriodicTest, ZeroPeriodAlwaysDue) {
