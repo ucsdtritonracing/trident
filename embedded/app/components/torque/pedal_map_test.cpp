@@ -1,13 +1,12 @@
 #include <gtest/gtest.h>
 
-#include <cmath>
 #include <limits>
 
 #include "app/components/torque/pedal_map.h"
 
-using Components::Torque::PedalMap;
+namespace Components::Torque {
 
-//testing for linear map
+//testing that map is linear
 TEST(PedalMapTest, DefaultMapIsLinear) {
     const PedalMap map;
 
@@ -17,3 +16,93 @@ TEST(PedalMapTest, DefaultMapIsLinear) {
     }
 }
 
+//changing vals doesn't affect endpoints
+TEST(PedalMapTest, EndpointsStayFixed) {
+    PedalMap map;
+    ASSERT_TRUE(map.setPoint(0, 0.1f));
+    ASSERT_TRUE(map.setPoint(15, 0.1f));
+
+    EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(0.0f));
+    EXPECT_FLOAT_EQ(1.0f, map.getPedalOutput(1.0f));
+    EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999f), 0.00001f);
+}
+
+//tests interpolation at exact and halfway between points
+TEST(PedalMapTest, CalculatesBetweenPoints) {
+    PedalMap map;
+
+    ASSERT_TRUE(map.setPoint(0, 0.4f));
+    ASSERT_TRUE(map.setPoint(1, 0.8f));
+
+    EXPECT_NEAR(0.4f, map.getPedalOutput(1.0f / 17.0f), 0.00001f);
+    EXPECT_NEAR(0.6f, map.getPedalOutput(1.5f / 17.0f), 0.00001f);
+    EXPECT_NEAR(0.8f, map.getPedalOutput(2.0f / 17.0f), 0.00001f);
+}
+
+//invalid inputs should return endpoint values
+TEST(PedalMapTest, HandlesInvalidInputs) {
+    const PedalMap map;
+
+    EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(-0.2f));
+    EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(-std::numeric_limits<float>::infinity()));
+    EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(std::numeric_limits<float>::quiet_NaN()));
+    EXPECT_FLOAT_EQ(1.0f, map.getPedalOutput(1.2f));
+    EXPECT_FLOAT_EQ(1.0f, map.getPedalOutput(std::numeric_limits<float>::infinity()));
+}
+
+// tests valid updates, invalid indices, invalid values
+TEST(PedalMapTest, SetsEditablePoints) {
+    PedalMap map;
+
+    ASSERT_TRUE(map.setPoint(0, 0.5f));
+    EXPECT_FLOAT_EQ(0.5f, map.getPoint(0));
+    
+    ASSERT_TRUE(map.setPoint(15, 0.9f));
+    EXPECT_FLOAT_EQ(0.9f, map.getPoint(15));
+
+    //invalid indices
+    EXPECT_FALSE(map.setPoint(16, 0.5f));
+    EXPECT_FALSE(map.setPoint(std::numeric_limits<std::size_t>::max(), 0.5f));
+
+    //invalid values
+    EXPECT_FALSE(map.setPoint(0, -0.1f));
+    EXPECT_FALSE(map.setPoint(0, 1.1f));
+    EXPECT_FALSE(map.setPoint(0, std::numeric_limits<float>::quiet_NaN()));
+    EXPECT_FALSE(map.setPoint(0, std::numeric_limits<float>::infinity()));
+    EXPECT_FALSE(map.setPoint(0, -std::numeric_limits<float>::infinity()));
+
+    // rejected updates must leave the previous value the same
+    EXPECT_FLOAT_EQ(0.5f, map.getPoint(0));
+}
+
+// tests that flat and increasing maps are valid
+TEST(PedalMapTest, AcceptsFlatAndIncreasingMaps) {
+    PedalMap map;
+
+    EXPECT_TRUE(map.isValid());
+
+    // flat is valid
+    for (std::size_t i = 0; i < PedalMap::NUM_EDITABLE_POINTS; i++) {
+        ASSERT_TRUE(map.setPoint(i, 0.5f));
+    }
+    EXPECT_TRUE(map.isValid());
+
+    // increasing is valid
+    for (std::size_t i = 0; i < PedalMap::NUM_EDITABLE_POINTS; i++) {
+        ASSERT_TRUE(map.setPoint(
+            i, static_cast<float>(i + 1) / 17.0f));
+    }
+    EXPECT_TRUE(map.isValid());
+}
+
+// decreasing points make the map invalid
+TEST(PedalMapTest, RejectsDecreasingMaps) {
+    PedalMap map;
+
+    // setPoint allows decreasing values; isValid detects them.
+    ASSERT_TRUE(map.setPoint(4, 0.8f));
+    ASSERT_TRUE(map.setPoint(5, 0.7f));
+
+    EXPECT_FALSE(map.isValid());
+}
+}
