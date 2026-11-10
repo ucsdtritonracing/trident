@@ -6,7 +6,7 @@
 
 namespace Components::Torque {
 
-//testing that map is linear
+// testing that map is linear
 TEST(PedalMapTest, DefaultMapIsLinear) {
     const PedalMap map;
 
@@ -16,7 +16,7 @@ TEST(PedalMapTest, DefaultMapIsLinear) {
     }
 }
 
-//changing vals doesn't affect endpoints
+// changing vals doesn't affect endpoints
 TEST(PedalMapTest, EndpointsStayFixed) {
     PedalMap map;
     ASSERT_TRUE(map.setPoint(0, 0.1f));
@@ -27,7 +27,7 @@ TEST(PedalMapTest, EndpointsStayFixed) {
     EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999999f), 0.00001f);
 }
 
-//tests interpolation at exact and halfway between points
+// tests interpolation at exact and halfway between points
 TEST(PedalMapTest, InterpolatesBetweenPoints) {
     PedalMap map;
 
@@ -39,7 +39,7 @@ TEST(PedalMapTest, InterpolatesBetweenPoints) {
     EXPECT_NEAR(0.8f, map.getPedalOutput(2.0f / 17.0f), 0.00001f);
 }
 
-//invalid inputs should return endpoint values
+// invalid inputs should return endpoint values
 TEST(PedalMapTest, HandlesInvalidInputs) {
     const PedalMap map;
 
@@ -56,15 +56,15 @@ TEST(PedalMapTest, SetsEditablePoints) {
 
     ASSERT_TRUE(map.setPoint(0, 0.5f));
     EXPECT_FLOAT_EQ(0.5f, map.getPoint(0));
-    
+
     ASSERT_TRUE(map.setPoint(15, 0.9f));
     EXPECT_FLOAT_EQ(0.9f, map.getPoint(15));
 
-    //invalid indices
+    // invalid indices
     EXPECT_FALSE(map.setPoint(16, 0.5f));
     EXPECT_FALSE(map.setPoint(std::numeric_limits<std::size_t>::max(), 0.5f));
 
-    //invalid values
+    // invalid values
     EXPECT_FALSE(map.setPoint(0, -0.1f));
     EXPECT_FALSE(map.setPoint(0, 1.1f));
     EXPECT_FALSE(map.setPoint(0, std::numeric_limits<float>::quiet_NaN()));
@@ -89,8 +89,7 @@ TEST(PedalMapTest, AcceptsFlatAndIncreasingMaps) {
 
     // increasing is valid
     for (std::size_t i = 0; i < PedalMap::NUM_EDITABLE_POINTS; i++) {
-        ASSERT_TRUE(map.setPoint(
-            i, static_cast<float>(i + 1) / 17.0f));
+        ASSERT_TRUE(map.setPoint(i, static_cast<float>(i + 1) / 17.0f));
     }
     EXPECT_TRUE(map.isValid());
 }
@@ -105,4 +104,4 @@ TEST(PedalMapTest, RejectsDecreasingMaps) {
 
     EXPECT_FALSE(map.isValid());
 }
-}
+} // namespace Components::Torque
