@@ -24,11 +24,11 @@ TEST(PedalMapTest, EndpointsStayFixed) {
 
     EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(0.0f));
     EXPECT_FLOAT_EQ(1.0f, map.getPedalOutput(1.0f));
-    EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999f), 0.00001f);
+    EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999999f), 0.00001f);
 }
 
 //tests interpolation at exact and halfway between points
-TEST(PedalMapTest, CalculatesBetweenPoints) {
+TEST(PedalMapTest, InterpolatesBetweenPoints) {
     PedalMap map;
 
     ASSERT_TRUE(map.setPoint(0, 0.4f));
