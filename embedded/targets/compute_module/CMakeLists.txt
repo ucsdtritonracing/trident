@@ -13,6 +13,12 @@ if(EMBEDDED_PLATFORM STREQUAL "stm32")
     # Restore the original project name
     set(CMAKE_PROJECT_NAME ${ORIGINAL_PROJECT_NAME})
 
+    # Required 'embedded_target_hal' for every target.
+    # This contains the HAL include paths and defines for its MCU configuration.
+    # Platform code links this instead of the CubeMX 'stm32cubemx' so it stays hardware agnostic.
+    add_library(embedded_target_hal INTERFACE)
+    target_link_libraries(embedded_target_hal INTERFACE stm32cubemx)
+
     # Export the linker script path for the executable to use later
     set(EMBEDDED_TARGET_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/cubemx/STM32G474xx_FLASH.ld CACHE INTERNAL "Target Linker Script")
 endif()
