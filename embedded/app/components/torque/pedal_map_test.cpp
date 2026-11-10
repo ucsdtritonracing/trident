@@ -20,23 +20,27 @@ TEST(PedalMapTest, DefaultMapIsLinear) {
 TEST(PedalMapTest, EndpointsStayFixed) {
     PedalMap map;
     ASSERT_TRUE(map.setPoint(0, 0.1f));
-    ASSERT_TRUE(map.setPoint(15, 0.1f));
+    ASSERT_TRUE(map.setPoint(PedalMap::NUM_EDITABLE_POINTS - 1, 0.1f));
 
     EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(0.0f));
     EXPECT_FLOAT_EQ(1.0f, map.getPedalOutput(1.0f));
     EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999999f), 0.00001f);
 }
 
-// tests interpolation at exact and halfway between points
+// tests interpolation at exact and between points
 TEST(PedalMapTest, InterpolatesBetweenPoints) {
     PedalMap map;
+    const float step = 1.0f / (PedalMap::NUM_TOTAL_POINTS - 1);
 
     ASSERT_TRUE(map.setPoint(0, 0.4f));
     ASSERT_TRUE(map.setPoint(1, 0.8f));
+    ASSERT_TRUE(map.setPoint(2, 0.9f));
+    ASSERT_TRUE(map.setPoint(3, 1.0f));
 
-    EXPECT_NEAR(0.4f, map.getPedalOutput(1.0f / 17.0f), 0.00001f);
-    EXPECT_NEAR(0.6f, map.getPedalOutput(1.5f / 17.0f), 0.00001f);
-    EXPECT_NEAR(0.8f, map.getPedalOutput(2.0f / 17.0f), 0.00001f);
+    EXPECT_NEAR(0.4f, map.getPedalOutput(step), 0.00001f);
+    EXPECT_NEAR(0.6f, map.getPedalOutput(1.5f * step), 0.00001f);
+    EXPECT_NEAR(0.8f, map.getPedalOutput(2.0f * step), 0.00001f);
+    EXPECT_NEAR(0.93f, map.getPedalOutput(3.3f * step), 0.00001f);
 }
 
 // invalid inputs should return endpoint values
@@ -57,11 +61,11 @@ TEST(PedalMapTest, SetsEditablePoints) {
     ASSERT_TRUE(map.setPoint(0, 0.5f));
     EXPECT_FLOAT_EQ(0.5f, map.getPoint(0));
 
-    ASSERT_TRUE(map.setPoint(15, 0.9f));
-    EXPECT_FLOAT_EQ(0.9f, map.getPoint(15));
+    ASSERT_TRUE(map.setPoint(PedalMap::NUM_EDITABLE_POINTS - 1, 0.9f));
+    EXPECT_FLOAT_EQ(0.9f, map.getPoint(PedalMap::NUM_EDITABLE_POINTS - 1));
 
     // invalid indices
-    EXPECT_FALSE(map.setPoint(16, 0.5f));
+    EXPECT_FALSE(map.setPoint(PedalMap::NUM_EDITABLE_POINTS, 0.5f));
     EXPECT_FALSE(map.setPoint(std::numeric_limits<std::size_t>::max(), 0.5f));
 
     // invalid values
@@ -89,7 +93,7 @@ TEST(PedalMapTest, AcceptsFlatAndIncreasingMaps) {
 
     // increasing is valid
     for (std::size_t i = 0; i < PedalMap::NUM_EDITABLE_POINTS; i++) {
-        ASSERT_TRUE(map.setPoint(i, static_cast<float>(i + 1) / 17.0f));
+        ASSERT_TRUE(map.setPoint(i, static_cast<float>(i + 1) / (PedalMap::NUM_TOTAL_POINTS - 1)));
     }
     EXPECT_TRUE(map.isValid());
 }

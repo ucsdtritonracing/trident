@@ -4,14 +4,13 @@
 
 namespace Components::Torque {
 
-/**
- * @brief Initializes a default linear pedal map.
- */
 class PedalMap {
 public:
     static constexpr std::size_t NUM_EDITABLE_POINTS = 16;
     static constexpr std::size_t NUM_TOTAL_POINTS = NUM_EDITABLE_POINTS + 2;
-
+    /**
+ * @brief Initializes a default linear pedal map.
+ */
     PedalMap();
 
     /**
