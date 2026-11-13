@@ -50,6 +50,8 @@ PollStatus HostPeripheral::Poll(Message& out) {
     return PollStatus::NEW_MESSAGE;
 }
 
-BusState HostPeripheral::GetStatus() { return BusState::BUS_OFF; }
+PeripheralStatus HostPeripheral::GetStatus() const {
+    return {.bus_state=BusState::BUS_OFF};
+}
 
 } // namespace Platform::Can
