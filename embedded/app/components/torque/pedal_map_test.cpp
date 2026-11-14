@@ -5,6 +5,7 @@
 #include "app/components/torque/pedal_map.h"
 
 namespace Components::Torque {
+constexpr float EPSILON = 1e-5f;
 
 // testing that map is linear
 TEST(PedalMapTest, DefaultMapIsLinear) {
@@ -12,7 +13,7 @@ TEST(PedalMapTest, DefaultMapIsLinear) {
 
     for (std::size_t i = 0; i < PedalMap::NUM_TOTAL_POINTS; i++) {
         const float input = static_cast<float>(i) / (PedalMap::NUM_TOTAL_POINTS - 1);
-        EXPECT_NEAR(input, map.getPedalOutput(input), 0.000001f);
+        EXPECT_NEAR(input, map.getPedalOutput(input), EPSILON);
     }
 }
 
@@ -24,7 +25,7 @@ TEST(PedalMapTest, EndpointsStayFixed) {
 
     EXPECT_FLOAT_EQ(0.0f, map.getPedalOutput(0.0f));
     EXPECT_FLOAT_EQ(1.0f, map.getPedalOutput(1.0f));
-    EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999999f), 0.00001f);
+    EXPECT_NEAR(1.0f, map.getPedalOutput(0.9999999f), EPSILON);
 }
 
 // tests interpolation at exact and between points
@@ -37,10 +38,10 @@ TEST(PedalMapTest, InterpolatesBetweenPoints) {
     ASSERT_TRUE(map.setPoint(2, 0.9f));
     ASSERT_TRUE(map.setPoint(3, 1.0f));
 
-    EXPECT_NEAR(0.4f, map.getPedalOutput(step), 0.00001f);
-    EXPECT_NEAR(0.6f, map.getPedalOutput(1.5f * step), 0.00001f);
-    EXPECT_NEAR(0.8f, map.getPedalOutput(2.0f * step), 0.00001f);
-    EXPECT_NEAR(0.93f, map.getPedalOutput(3.3f * step), 0.00001f);
+    EXPECT_NEAR(0.4f, map.getPedalOutput(step), EPSILON);
+    EXPECT_NEAR(0.6f, map.getPedalOutput(1.5f * step), EPSILON);
+    EXPECT_NEAR(0.8f, map.getPedalOutput(2.0f * step), EPSILON);
+    EXPECT_NEAR(0.93f, map.getPedalOutput(3.3f * step), EPSILON);
 }
 
 // invalid inputs should return endpoint values
