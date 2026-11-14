@@ -13,6 +13,10 @@ if(EMBEDDED_PLATFORM STREQUAL "stm32")
     # Restore the original project name
     set(CMAKE_PROJECT_NAME ${ORIGINAL_PROJECT_NAME})
 
+    # Export the target's HAL to STM32 platform libraries
+    add_library(embedded_target_hal INTERFACE)
+    target_link_libraries(embedded_target_hal INTERFACE STM32_Drivers)
+
     # Export the linker script path for the executable to use later
     set(EMBEDDED_TARGET_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/cubemx/STM32G474xx_FLASH.ld CACHE INTERNAL "Target Linker Script")
 endif()
