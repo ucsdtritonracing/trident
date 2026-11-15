@@ -2,7 +2,14 @@
 
 #include <cstdint>
 
+/// Maximum data length for a classic CAN message.
 constexpr int MAX_CAN_DATA_LENGTH = 8;
+
+/// Largest standard (11-bit) CAN ID.
+constexpr uint32_t MAX_STANDARD_ID = 0x7FF;
+
+/// Largest extended (29-bit) CAN ID.
+constexpr uint32_t MAX_EXTENDED_ID = 0x1FFFFFFF;
 
 namespace Platform::Can {
 
@@ -26,7 +33,11 @@ enum class PollStatus : uint8_t {
 };
 
 struct Message {
+    /// Must fit in 11 bits for standard frames, or 29 bits for extended frames.
     uint32_t id;
+    /// Standard and extended frames with the same numeric ID are different messages.
+    bool extended;
+    /// The number of data bytes in the message. Not the DLC.
     uint8_t length;
     uint8_t data[MAX_CAN_DATA_LENGTH];
 };
