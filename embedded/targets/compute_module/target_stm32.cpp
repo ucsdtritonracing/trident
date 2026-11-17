@@ -20,12 +20,18 @@ constinit Peripherals peripherals{
 extern "C" void SystemClock_Config();
 
 void Init() {
+    // CubeMX initialization calls
     HAL_Init();
     SystemClock_Config();
     MX_GPIO_Init();
     MX_FDCAN2_Init();
     MX_FDCAN3_Init();
-    if (!Stm32::can1.Start() || !Stm32::can2.Start()) {
+    
+    // Peripheral setup
+    if (!Stm32::can1.Start()) {
+        Error_Handler();
+    }
+    if (!Stm32::can2.Start()) {
         Error_Handler();
     }
 
