@@ -24,6 +24,6 @@ class Context:
             print(name + " is not supported by " + self.config.name)
 
     def poll(self):
-        events = self.poller.poll()
+        events = self.poller.poll(0)
         for sock in events:
             sock.recv()  # get message and queue it
