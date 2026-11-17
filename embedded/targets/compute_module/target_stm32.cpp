@@ -40,9 +40,8 @@ void Init() {
 
 } // namespace Target
 
-// CubeMX's syscalls.c and sysmem.c provide the rest of the syscalls newlib needs. Its _read and
-// _write are weak and call __io_getchar and __io_putchar, which nothing defines yet, so override
-// them with stubs until stdio is routed somewhere (e.g. USB or UART).
+// CubeMX's syscalls.c and sysmem.c provide the rest of the syscalls newlib needs.
+// Overriding these syscalls so printf compiles until stdio is routed somewhere (e.g. USB or UART).
 extern "C" {
 
 // NOLINTBEGIN(readability-identifier-naming): newlib syscall names
