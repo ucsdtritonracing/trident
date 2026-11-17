@@ -12,9 +12,7 @@ if(EMBEDDED_PLATFORM STREQUAL "host")
     target_link_libraries(can PUBLIC
         cppzmq
     )
-endif()
-
-if(EMBEDDED_PLATFORM STREQUAL "stm32")
+elseif(EMBEDDED_PLATFORM STREQUAL "stm32")
     # Link the STM32 HAL provided by the selected target
     target_link_libraries(can PUBLIC
         embedded_target_hal
