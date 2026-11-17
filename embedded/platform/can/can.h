@@ -45,7 +45,9 @@ struct Message {
 /**
  * @brief Status information for a CAN peripheral.
  *
- * @details The counters only update after the peripheral is initialized. Counters only increase, except when they wrap.
+ * @details The counters only update after the peripheral is initialized. Counters only increase,
+ * except when they wrap.
+ *
  * @note The terminology used here:
  * - FIFO: a hardware FIFO inside the microcontroller. Does not apply to host implementation.
  * - Buffer: a software buffer used to store or enqueue messages.
