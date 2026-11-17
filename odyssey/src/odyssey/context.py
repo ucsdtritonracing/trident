@@ -1,7 +1,8 @@
 from dataclasses import fields
 
 import zmq
-from ports import PortConfig
+
+from .ports import PortConfig
 
 
 class Context:

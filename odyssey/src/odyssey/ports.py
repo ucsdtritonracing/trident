@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from peripherals import CANPeripheral
+from .peripherals import CANPeripheral
 
 
 @dataclass(frozen=True, eq=False)
