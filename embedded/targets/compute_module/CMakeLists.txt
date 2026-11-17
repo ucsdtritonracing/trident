@@ -28,7 +28,18 @@ add_library(embedded_target STATIC target_${EMBEDDED_PLATFORM}.cpp)
 target_link_libraries(embedded_target PUBLIC platform_interface)
 
 if(EMBEDDED_PLATFORM STREQUAL "stm32")
-    target_link_libraries(embedded_target PRIVATE embedded_target_cubemx)
+    # Peripheral instances and callbacks
+    target_sources(embedded_target PRIVATE
+        stm32/can.cpp
+    )
+    # stm32g4xx_it.c in embedded_target_cubemx defines the interrupt handlers, which override the
+    # weak defaults in the startup file. Nothing references that file directly, so the linker never
+    # pulls it out of the static archive and the weak defaults are used instead. WHOLE_ARCHIVE
+    # forces every object in the archive into the link. HAL_MspInit in stm32g4xx_hal_msp.c has the
+    # same problem.
+    target_link_libraries(embedded_target PRIVATE
+        "$<LINK_LIBRARY:WHOLE_ARCHIVE,embedded_target_cubemx>"
+    )
 endif()
 
 target_link_libraries(embedded_target PRIVATE
