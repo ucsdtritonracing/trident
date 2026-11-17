@@ -5,7 +5,7 @@ import zmq
 
 class BasePeripheral:
     def __init__(self, context, out_port, in_port):
-        self.lastMsgQueue = queue.Queue(500)
+        self.recvQueue = queue.Queue(500)
         self.data_out = context.socket(zmq.PUB)
         self.data_in = context.socket(zmq.SUB)
         self.data_out.bind("tcp://localhost:" + out_port)
@@ -19,7 +19,7 @@ class BasePeripheral:
 
     def recv(self):
         try:
-            self.lastMsgQueue.put(self.data_in.recv())
+            self.recvQueue.put(self.data_in.recv())
         except queue.Full:
             print("Internal Queue Full! (Not HWM) @TCP Port:" + self.data_in.underlying)
 
@@ -28,3 +28,9 @@ class BasePeripheral:
 
     def get_recv_socket(self):
         return self.data_in
+
+    def get_last_msg(self):
+        try:
+            return self.recvQueue.get()
+        except queue.Empty:
+            return None
