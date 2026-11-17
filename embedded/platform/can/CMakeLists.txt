@@ -13,7 +13,8 @@ if(EMBEDDED_PLATFORM STREQUAL "host")
         cppzmq
     )
 elseif(EMBEDDED_PLATFORM STREQUAL "stm32")
-    # HAL headers and defines specified in targets/*/CMakeLists.txt.
-    # PUBLIC because can_stm32.h will expose HAL types such as FDCAN_HandleTypeDef.
-    target_link_libraries(can PUBLIC embedded_target_hal)
+    # Link the STM32 HAL provided by the selected target
+    target_link_libraries(can PUBLIC
+        embedded_target_hal
+    )
 endif()
