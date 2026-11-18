@@ -26,7 +26,7 @@ void Init() {
     MX_GPIO_Init();
     MX_FDCAN2_Init();
     MX_FDCAN3_Init();
-    
+
     // Peripheral setup
     if (!Stm32::can1.Start()) {
         Error_Handler();
