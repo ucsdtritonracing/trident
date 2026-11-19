@@ -3,10 +3,11 @@ import zmq
 from .peripherals import CANPeripheral
 from .ports import Peripherals
 
+
 class Poller:
     def __init__(self):
         self.poller = zmq.Poller()
-        self.handlers = {} # (socket, deserializer)
+        self.handlers = {}  # (socket: peripheral)
 
     def register(self, peripheral):
         self.poller.register(peripheral.get_recv_sock(), zmq.POLLIN)
@@ -14,7 +15,8 @@ class Poller:
 
     def poll(self):
         return self.poller.poll(0)
-    
+
+
 class Context:
     def __init__(self, peripherals: Peripherals):
         self.zmq_ctx = zmq.Context()
@@ -27,4 +29,4 @@ class Context:
         events = self.poller.poll(0)
         for sock in events:
             p = self.poller.handlers[sock[0]]
-            p.recv() # get message from sock
+            p.recv()  # get message from sock

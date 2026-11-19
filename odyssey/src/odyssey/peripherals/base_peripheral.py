@@ -6,9 +6,9 @@ from odyssey import PortConfig
 
 
 class BasePeripheral:
-    def __init__(self, context, poller, portConfig: PortConfig):
-        self.out_port = portConfig.out_port
-        self.in_port = portConfig.in_port
+    def __init__(self, context, poller, port_config: PortConfig):
+        self.out_port = port_config.out_port
+        self.in_port = port_config.in_port
         self.recv_queue = deque.Queue(500)
         self.out_sock = context.socket(zmq.PUB)
         self.in_sock = context.socket(zmq.SUB)
