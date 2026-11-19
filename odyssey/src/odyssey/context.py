@@ -1,23 +1,30 @@
-from dataclasses import fields
-from .peripherals import CANPeripheral 
 import zmq
 
+from .peripherals import CANPeripheral
 from .ports import Peripherals
 
-class Context:
-    
-    def __init__(self, peripherals: Peripherals):
-        self.can1 = CANPeripheral(peripherals.can1) if not None else None
-
-        self.zmq_ctx = zmq.Context()
-        self.command = self.zmq_ctx.socket(zmq.REQ)  # ruff: ignore[F841]
+class Poller:
+    def __init__(self):
         self.poller = zmq.Poller()
-        self.peripherals = {}
+        self.handlers = {} # (socket, deserializer)
 
-        for p in self.peripherals:
-            self.poller.register(p.get_recv_socket(), zmq.POLLIN)
+    def register(self, peripheral):
+        self.poller.register(peripheral.get_recv_sock(), zmq.POLLIN)
+        self.handlers[peripheral.get_recv_sock()] = peripheral
+
+    def poll(self):
+        return self.poller.poll(0)
+    
+class Context:
+    def __init__(self, peripherals: Peripherals):
+        self.zmq_ctx = zmq.Context()
+        self.poller = Poller()
+
+        self.can1 = CANPeripheral(self.zmq_ctx, self.poller, peripherals.can1) if not None else None
+        self.command = self.zmq_ctx.socket(zmq.REQ)  # ruff: ignore[F841]
 
     def poll(self):
         events = self.poller.poll(0)
         for sock in events:
-            sock[0].recv()  #get message from sock = (socket, event_mask) 
+            p = self.poller.handlers[sock[0]]
+            p.recv() # get message from sock

@@ -1,5 +1,6 @@
 from .base_peripheral import BasePeripheral
 
+
 class CANPeripheral(BasePeripheral):
     def serialize(self, msg):
         # implement serialize function here

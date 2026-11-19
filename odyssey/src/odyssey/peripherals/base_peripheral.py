@@ -1,10 +1,12 @@
 from collections import deque
-from odyssey import PortConfig
+
 import zmq
+
+from odyssey import PortConfig
 
 
 class BasePeripheral:
-    def __init__(self, context, portConfig: PortConfig):
+    def __init__(self, context, poller, portConfig: PortConfig):
         self.out_port = portConfig.out_port
         self.in_port = portConfig.in_port
         self.recv_queue = deque.Queue(500)
@@ -14,6 +16,7 @@ class BasePeripheral:
         self.in_sock.connect(f"tcp://localhost: {self.in_port}")
         # subscribe to everything, as sockets autofilter
         self.in_sock.setsockopt(zmq.SUBSCRIBE, b"")
+        poller.register(self)
 
     def serialize(self, msg):
         # Should serialize one protobuf message
@@ -30,7 +33,7 @@ class BasePeripheral:
 
     def recv(self):
         self.recv_queue.append(self.in_sock.recv_serialized(self.deserialize))
-    
+
     def get_send_socket(self):
         return self.out_sock
 
