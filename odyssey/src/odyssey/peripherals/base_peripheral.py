@@ -1,4 +1,4 @@
-import queue
+from collections import deque
 
 import zmq
 
@@ -7,7 +7,7 @@ class BasePeripheral:
     def __init__(self, out_port, in_port):
         self.out_port = out_port
         self.in_port = in_port
-        self.recv_queue = queue.Queue(500)
+        self.recv_queue = deque.Queue(500)
 
     def init_sockets(self, context):
         self.out_sock = context.socket(zmq.PUB)
@@ -28,14 +28,11 @@ class BasePeripheral:
         raise NotImplementedError("Must be implemented!")
 
     def send(self, msg):
-        self.out_sock.send_serialized(self.serialize)
+        self.out_sock.send_serialized(msg, self.serialize)
 
     def recv(self):
-        try:
-            self.recv_queue.put(self.in_sock.recv_serialized(self.deserialize))
-        except queue.Full:
-            print("Internal Queue Full! (Not HWM) @TCP Port:" + self.in_sock.underlying)
-
+        self.recv_queue.append(self.in_sock.recv_serialized(self.deserialize))
+    
     def get_send_socket(self):
         return self.out_sock
 
@@ -44,6 +41,6 @@ class BasePeripheral:
 
     def get_next_msg(self):
         try:
-            return self.recvQueue.get()
-        except queue.Empty:
+            return self.recvQueue.pop()
+        except IndexError:
             return None
