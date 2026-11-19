@@ -2,14 +2,14 @@ from collections import deque
 
 import zmq
 
-from odyssey import PortConfig
+from odyssey import SocketConfig
 
 
 class BasePeripheral:
-    def __init__(self, context, poller, port_config: PortConfig):
-        self.out_port = port_config.out_port
-        self.in_port = port_config.in_port
-        self.recv_queue = deque.Queue(500)
+    def __init__(self, context, poller, sock_config: SocketConfig):
+        self.out_port = sock_config.out_port
+        self.in_port = sock_config.in_port
+        self.recv_queue = deque()
         self.out_sock = context.socket(zmq.PUB)
         self.in_sock = context.socket(zmq.SUB)
         self.out_sock.bind(f"tcp://localhost: {self.out_port}")
@@ -42,6 +42,6 @@ class BasePeripheral:
 
     def get_next_msg(self):
         try:
-            return self.recvQueue.pop()
+            return self.recv_queue.pop()
         except IndexError:
             return None

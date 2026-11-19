@@ -1,4 +1,4 @@
 from .context import Context
-from .ports import PortConfig, Ports
+from .ports import SocketConfig, Peripherals
 
-__all__ = ["PortConfig", "Context", "Ports"]
+__all__ = ["SocketConfig", "Context", "Peripherals"]
