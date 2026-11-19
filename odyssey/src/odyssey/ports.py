@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from .peripherals import CANPeripheral
-
-
 @dataclass(frozen=True, eq=False)
-class Ports:
-    can1: CANPeripheral | None = None
+class Peripherals:
+    can1: SocketConfig | None = None
 
+class SocketConfig:
+    def __init__(self, in_port: int, out_port: int):
+        self.in_port = in_port
+        self.out_port = out_port
 
-class PortConfig(Enum):
-    Front = Ports(can1=CANPeripheral(1234, 5678))
+class AppConfig(Enum):
+    Front = Peripherals(can1 = SocketConfig(1234,123213))

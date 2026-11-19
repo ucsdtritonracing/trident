@@ -1,15 +1,13 @@
 from collections import deque
-
+from odyssey import PortConfig
 import zmq
 
 
 class BasePeripheral:
-    def __init__(self, out_port, in_port):
-        self.out_port = out_port
-        self.in_port = in_port
+    def __init__(self, context, portConfig: PortConfig):
+        self.out_port = portConfig.out_port
+        self.in_port = portConfig.in_port
         self.recv_queue = deque.Queue(500)
-
-    def init_sockets(self, context):
         self.out_sock = context.socket(zmq.PUB)
         self.in_sock = context.socket(zmq.SUB)
         self.out_sock.bind(f"tcp://localhost: {self.out_port}")
