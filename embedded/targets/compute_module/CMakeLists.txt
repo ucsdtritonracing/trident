@@ -10,6 +10,9 @@ if(EMBEDDED_PLATFORM STREQUAL "stm32")
     # 'embedded_target_cubemx' target.
     add_subdirectory(cubemx/cmake/stm32cubemx)
 
+    # Treat CubeMX headers as system headers to ignore the clang-tidy and compiler warnings
+    set_target_properties(stm32cubemx PROPERTIES SYSTEM TRUE)
+
     # Restore the original project name
     set(CMAKE_PROJECT_NAME ${ORIGINAL_PROJECT_NAME})
 
