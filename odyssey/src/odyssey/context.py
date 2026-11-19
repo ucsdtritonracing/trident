@@ -16,6 +16,7 @@ class Context:
             if p is not None:
                 self.peripherals[f.name] = p
         for p in self.peripherals:
+            p.init_sockets(self.zmq_ctx)
             self.poller.register(p.getRecvSocket(), zmq.POLLIN)
 
     def __getattr__(self, name: str):
@@ -28,4 +29,3 @@ class Context:
         events = self.poller.poll(0)
         for sock in events:
             sock.recv()  # get message and queue it
-

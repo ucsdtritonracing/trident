@@ -4,12 +4,16 @@ import zmq
 
 
 class BasePeripheral:
-    def __init__(self, context, out_port, in_port):
+    def __init__(self, out_port, in_port):
+        self.out_port = out_port
+        self.in_port = in_port
         self.recv_queue = queue.Queue(500)
+
+    def init_sockets(self, context):
         self.out_sock = context.socket(zmq.PUB)
         self.in_sock = context.socket(zmq.SUB)
-        self.out_sock.bind(f"tcp://localhost: {out_port}")
-        self.in_sock.connect(f"tcp://localhost: {in_port}")
+        self.out_sock.bind(f"tcp://localhost: {self.out_port}")
+        self.in_sock.connect(f"tcp://localhost: {self.in_port}")
         # subscribe to everything, as sockets autofilter
         self.in_sock.setsockopt(zmq.SUBSCRIBE, b"")
 
@@ -17,10 +21,10 @@ class BasePeripheral:
         # Should serialize one protobuf message
         # Returns its bytestring in a single element list with SerializeToString()
         raise NotImplementedError("Must be implemented!")
-    
-    def deserialize(self,msg):
-        # Should deserialize one bytestring inside a single element list in place with ParseFromString()
-        # Returns nothing 
+
+    def deserialize(self, msg):
+        # Should deserialize a bytestring inside a single element list with ParseFromString()
+        # Returns the message, not in a list
         raise NotImplementedError("Must be implemented!")
 
     def send(self, msg):

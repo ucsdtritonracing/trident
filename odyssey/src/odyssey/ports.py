@@ -10,5 +10,4 @@ class Ports:
 
 
 class PortConfig(Enum):
-    Front = Ports(can1=CANPeripheral())
-    #TODO: FIX PROPER INSTANTIATON add extra init method that takes in context and then finally inits sockets
+    Front = Ports(can1=CANPeripheral(1234, 5678))
