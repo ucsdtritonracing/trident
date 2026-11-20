@@ -29,6 +29,7 @@ python = ">=3.11"
 uv = "*"
 ruff = ">=0.1.60"
 protobuf = "==7.35.1"
+pyzmq = "*"
 
 # Developer dependencies
 just = "*"
