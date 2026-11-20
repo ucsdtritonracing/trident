@@ -9,9 +9,9 @@ class SocketConfig:
 
 
 @dataclass(frozen=True, eq=False)
-class Peripherals:
+class AppSockets:
     can1: SocketConfig | None = None
 
 
 class AppConfig(Enum):
-    Front = Peripherals(can1=SocketConfig(1234, 123213))
+    FRONT = AppSockets(can1=SocketConfig(1234, 123213))

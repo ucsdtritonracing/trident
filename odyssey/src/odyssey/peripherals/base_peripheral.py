@@ -1,16 +1,16 @@
 import zmq
 
-from odyssey import SocketConfig
+from odyssey.ports import SocketConfig
 
 
 class BasePeripheral:
-    def __init__(self, context, sock_config: SocketConfig):
+    def __init__(self, context: zmq.Context, sock_config: SocketConfig):
         self.out_port = sock_config.out_port
         self.in_port = sock_config.in_port
         self.out_sock = context.socket(zmq.PUB)
         self.in_sock = context.socket(zmq.SUB)
-        self.out_sock.bind(f"tcp://localhost: {self.out_port}")
-        self.in_sock.connect(f"tcp://localhost: {self.in_port}")
+        self.out_sock.bind(f"tcp://localhost:{self.out_port}")
+        self.in_sock.connect(f"tcp://localhost:{self.in_port}")
         # subscribe to everything, as sockets autofilter
         self.in_sock.setsockopt(zmq.SUBSCRIBE, b"")
 
