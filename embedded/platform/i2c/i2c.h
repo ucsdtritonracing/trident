@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <span>
 
-namespace Platform::I2c {
+namespace Platform::I2C {
 
 /// Result of a Start*() call.
 enum class StartStatus : uint8_t {
@@ -57,15 +57,14 @@ public:
     virtual StartStatus StartRawRead(Transfer& transfer) = 0;
 
     /// Start writing the buffer to a register on the device.
-    virtual StartStatus StartRegisterWrite(Transfer& transfer, uint16_t reg,
-                                           RegisterSize reg_size) = 0;
+    virtual StartStatus StartRegisterWrite(Transfer& transfer, uint16_t reg, RegisterSize reg_size) = 0;
+                                           
 
     /// Start reading from a register on the device into the buffer.
-    virtual StartStatus StartRegisterRead(Transfer& transfer, uint16_t reg,
-                                          RegisterSize reg_size) = 0;
+    virtual StartStatus StartRegisterRead(Transfer& transfer, uint16_t reg, RegisterSize reg_size) = 0;
 
     /// Get the current status of a transfer.
     virtual TransferStatus Poll(const Transfer& transfer) = 0;
 };
 
-} // namespace Platform::I2c
+} // namespace Platform::I2C
