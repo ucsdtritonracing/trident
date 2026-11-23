@@ -2,6 +2,7 @@
 
 #include "targets/compute_module/target.h"
 #include "platform/can/can_stm32.h"
+#include "platform/i2c/i2c_stm32.h"
 
 // Store the peripheral instances in a private namespace.
 // Limits peripheral access to Target::peripherals below.
@@ -9,6 +10,7 @@ namespace {
 
 Platform::Can::Stm32Peripheral stm32_can1{};
 Platform::Can::Stm32Peripheral stm32_can2{};
+Platform::I2C::Stm32Peripheral stm32_i2c{};
 
 } // namespace
 
@@ -17,6 +19,7 @@ namespace Target {
 constinit Peripherals peripherals{
     .can1 = stm32_can1,
     .can2 = stm32_can2,
+    .i2c = stm32_i2c,
 };
 
 void Init() { printf("Running on STM32!\n"); }

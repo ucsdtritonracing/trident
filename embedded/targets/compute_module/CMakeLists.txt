@@ -32,4 +32,5 @@ endif()
 target_link_libraries(embedded_target PRIVATE
     # Required implementation libraries
     can
+    i2c
 )
