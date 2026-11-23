@@ -1,33 +1,13 @@
-from enum import Enum
-
 import zmq
 
-
-class QueueStatus(Enum):
-    NEW_MESSAGE = 0
-    EMPTY = 1
-    ERROR = 2
-
-
-class Message:
-    def __init__(self, data, address):
-        self.data = data
-        self.address = address
+from .peripherals import CANPeripheral
+from .ports import AppConfig
 
 
 class Context:
-    def __init__(self):
-        context = zmq.Context()
-        data_out = context.socket(zmq.PUB)  # ruff: ignore[F841]
-        data_in = context.socket(zmq.SUB)  # ruff: ignore[F841]
-        command = context.socket(zmq.REQ)  # ruff: ignore[F841]
-
-    """Sends a CAN message"""
-
-    def send_sim_can(self, message):
-        return
-
-    """Stores the message into the provided buffer and returns a QueueStatus"""
-
-    def poll_sim_can(self, bus, message):
-        return
+    def __init__(self, app_config: AppConfig):
+        self.zmq_ctx = zmq.Context()
+        self.app_config = app_config.value
+        if self.app_config.can1 is not None:
+            self.can1 = CANPeripheral(self.zmq_ctx, self.app_config.can1)
+        self.command = self.zmq_ctx.socket(zmq.REQ)  # ruff: ignore[F841]
