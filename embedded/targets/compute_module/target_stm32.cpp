@@ -1,37 +1,51 @@
 #include <cstdio>
 
 #include "targets/compute_module/target.h"
+#include "targets/compute_module/stm32/peripherals.h"
 #include "platform/can/can_stm32.h"
 
-// Store the peripheral instances in a private namespace.
-// Limits peripheral access to Target::peripherals below.
-namespace {
-
-Platform::Can::Stm32Peripheral stm32_can1{};
-Platform::Can::Stm32Peripheral stm32_can2{};
-
-} // namespace
+#include "main.h"
+#include "gpio.h"
+#include "fdcan.h"
 
 namespace Target {
 
 constinit Peripherals peripherals{
-    .can1 = stm32_can1,
-    .can2 = stm32_can2,
+    .can1 = Stm32::can1,
+    .can2 = Stm32::can2,
 };
 
-void Init() { printf("Running on STM32!\n"); }
+// Defined in cubemx/Core/Src/main.c
+// NOLINTNEXTLINE(readability-identifier-naming): CubeMX generated signature
+extern "C" void SystemClock_Config();
+
+void Init() {
+    // CubeMX initialization calls
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    MX_FDCAN2_Init();
+    MX_FDCAN3_Init();
+
+    // Peripheral setup
+    if (!Stm32::can1.Start()) {
+        Error_Handler();
+    }
+    if (!Stm32::can2.Start()) {
+        Error_Handler();
+    }
+
+    printf("Running on STM32!\n");
+}
 
 } // namespace Target
 
-// Implement syscalls required by C library but not provided by STM32 HAL. These are just stubs for
-// now, and should be implemented properly if needed.
+// CubeMX's syscalls.c and sysmem.c provide the rest of the syscalls newlib needs.
+// Overriding these syscalls so printf compiles until stdio is routed somewhere (e.g. USB or UART).
 extern "C" {
 
-int _close(int file) { return -1; }
-int _fstat(int file, struct stat* st) { return 0; }
-int _isatty(int file) { return 1; }
-int _lseek(int file, int offset, int whence) { return 0; }
+// NOLINTBEGIN(readability-identifier-naming): newlib syscall names
 int _read(int file, char* ptr, int len) { return 0; }
 int _write(int file, char* ptr, int len) { return len; }
-void* _sbrk(ptrdiff_t incr) { return (void*)-1; }
+// NOLINTEND(readability-identifier-naming)
 }

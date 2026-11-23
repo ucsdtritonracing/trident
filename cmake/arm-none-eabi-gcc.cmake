@@ -44,3 +44,9 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --specs=nano.specs --specs
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--gc-sections")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--print-memory-usage")
 set(TOOLCHAIN_LINK_LIBRARIES "m")
+
+# CMake only predefines the WHOLE_ARCHIVE link feature for known host platforms, not Generic.
+# Define it for GNU ld so targets can use $<LINK_LIBRARY:WHOLE_ARCHIVE,...>.
+set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE
+    "LINKER:--whole-archive" "<LINK_ITEM>" "LINKER:--no-whole-archive")
+set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)

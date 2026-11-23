@@ -25,7 +25,7 @@ public:
     }
     SendStatus Send(const Message& message) override;
     PollStatus Poll(Message& out) override;
-    BusState GetStatus() override;
+    PeripheralStatus GetStatus() const override;
 
 private:
     zmq::context_t& zmq_ctx;
