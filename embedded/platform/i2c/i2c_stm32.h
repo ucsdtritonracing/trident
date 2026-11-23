@@ -4,7 +4,7 @@
 
 namespace Platform::I2C {
 
-/// STM32 I2C peripheral. Stub for now with every Start*() call set to fail
+/// STM32 I2C peripheral - stub
 class Stm32Peripheral : public Peripheral {
 public:
     StartStatus StartRawWrite(Transfer& transfer) override;

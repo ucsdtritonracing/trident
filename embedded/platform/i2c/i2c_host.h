@@ -4,7 +4,7 @@
 
 namespace Platform::I2C {
 
-/// Host I2C peripheral. Stub for now: every Start*() call fails.
+/// Host I2C peripheral - stub
 class HostPeripheral : public Peripheral {
 public:
     StartStatus StartRawWrite(Transfer& transfer) override;
