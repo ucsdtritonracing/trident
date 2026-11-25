@@ -29,6 +29,7 @@ if(EMBEDDED_PLATFORM STREQUAL "stm32")
     # Peripheral instances and callbacks
     target_sources(embedded_target PRIVATE
         stm32/can.cpp
+        stm32/i2c.cpp
     )
     # stm32g4xx_it.c in embedded_target_cubemx defines the interrupt handlers, which override the
     # weak defaults in the startup file. Nothing references that file directly, so the linker never
@@ -43,4 +44,5 @@ endif()
 target_link_libraries(embedded_target PRIVATE
     # Required implementation libraries
     can
+    i2c
 )

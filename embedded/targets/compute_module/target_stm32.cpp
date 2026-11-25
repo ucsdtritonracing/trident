@@ -13,6 +13,7 @@ namespace Target {
 constinit Peripherals peripherals{
     .can1 = Stm32::can1,
     .can2 = Stm32::can2,
+    .i2c = Stm32::i2c,
 };
 
 // Defined in cubemx/Core/Src/main.c

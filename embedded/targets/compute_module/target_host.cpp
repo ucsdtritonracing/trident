@@ -4,6 +4,7 @@
 
 #include "targets/compute_module/target.h"
 #include "platform/can/can_host.h"
+#include "platform/i2c/i2c_host.h"
 
 #include <zmq.hpp>
 
@@ -29,6 +30,8 @@ Platform::Can::HostPeripheral host_can1{zmq_ctx, MakeAddress(CAN1_PORTS.send),
 Platform::Can::HostPeripheral host_can2{zmq_ctx, MakeAddress(CAN2_PORTS.send),
                                         MakeAddress(CAN2_PORTS.receive)};
 
+Platform::I2c::HostPeripheral host_i2c{};
+
 } // namespace
 
 namespace Target {
@@ -36,6 +39,7 @@ namespace Target {
 constinit Peripherals peripherals{
     .can1 = host_can1,
     .can2 = host_can2,
+    .i2c = host_i2c,
 };
 
 void Init() { printf("Running on host!\n"); }
