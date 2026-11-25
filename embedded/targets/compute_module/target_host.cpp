@@ -30,7 +30,7 @@ Platform::Can::HostPeripheral host_can1{zmq_ctx, MakeAddress(CAN1_PORTS.send),
 Platform::Can::HostPeripheral host_can2{zmq_ctx, MakeAddress(CAN2_PORTS.send),
                                         MakeAddress(CAN2_PORTS.receive)};
 
-Platform::I2C::HostPeripheral host_i2c{};
+Platform::I2c::HostPeripheral host_i2c{};
 
 } // namespace
 

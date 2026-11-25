@@ -2,7 +2,7 @@
 
 #include "platform/i2c/i2c.h"
 
-namespace Platform::I2C {
+namespace Platform::I2c {
 
 /// Host I2C peripheral - stub
 class HostPeripheral : public Peripheral {
@@ -15,4 +15,4 @@ public:
     TransferStatus Poll(const Transfer& transfer) override;
 };
 
-} // namespace Platform::I2C
+} // namespace Platform::I2c

@@ -3,26 +3,17 @@
 #include "targets/compute_module/target.h"
 #include "targets/compute_module/stm32/peripherals.h"
 #include "platform/can/can_stm32.h"
-#include "platform/i2c/i2c_stm32.h"
 
 #include "main.h"
 #include "gpio.h"
 #include "fdcan.h"
-
-// Store the peripheral instances that don't need CubeMX handles in a private namespace.
-// Limits peripheral access to Target::peripherals below.
-namespace {
-
-Platform::I2C::Stm32Peripheral stm32_i2c{};
-
-} // namespace
 
 namespace Target {
 
 constinit Peripherals peripherals{
     .can1 = Stm32::can1,
     .can2 = Stm32::can2,
-    .i2c = stm32_i2c,
+    .i2c = Stm32::i2c,
 };
 
 // Defined in cubemx/Core/Src/main.c

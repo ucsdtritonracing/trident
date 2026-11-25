@@ -2,7 +2,7 @@
 
 #include "platform/i2c/i2c.h"
 
-namespace Platform::I2C {
+namespace Platform::I2c {
 
 StartStatus Stm32Peripheral::StartRawWrite(Transfer& transfer) { return StartStatus::ERROR; }
 
@@ -20,4 +20,4 @@ StartStatus Stm32Peripheral::StartRegisterRead(Transfer& transfer, uint16_t reg,
 
 TransferStatus Stm32Peripheral::Poll(const Transfer& transfer) { return transfer.status; }
 
-} // namespace Platform::I2C
+} // namespace Platform::I2c

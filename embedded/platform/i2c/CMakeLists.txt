@@ -1,7 +1,7 @@
 # The interface that contains only abstract types
 # Headers are included by their full path from the embedded directory
 add_library(i2c_interface INTERFACE)
-target_link_libraries(i2c_interface INTERFACE embedded_includes)
+target_link_libraries(i2c_interface INTERFACE embedded_includes core)
 
 # The concrete implementation library of the interface, chosen by platform
 add_library(i2c STATIC i2c_${EMBEDDED_PLATFORM}.cpp)

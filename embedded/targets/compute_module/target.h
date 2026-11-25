@@ -10,7 +10,7 @@ namespace Target {
 struct Peripherals {
     Platform::Can::Peripheral& can1;
     Platform::Can::Peripheral& can2;
-    Platform::I2C::Peripheral& i2c;
+    Platform::I2c::Peripheral& i2c;
 };
 
 extern constinit Peripherals peripherals;
